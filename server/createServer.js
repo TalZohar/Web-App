@@ -1,0 +1,13 @@
+// import node modules
+const path = require('path');
+const http = require('http');
+const express = require('express');
+const socketIO = require('socket.io');
+
+// create http server + express + socket
+const port = process.env.PORT || 3000
+let app = express();
+let server = http.createServer(app);
+let io = socketIO(server)
+
+module.exports = {io, server, app, port}
