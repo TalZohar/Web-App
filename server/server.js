@@ -22,7 +22,8 @@ let users = new Users()
 let rooms = new Rooms()
 
 const publicPath = path.join(__dirname, '/../public/');
-app.use(express.static(publicPath ));
+app.use(express.static(publicPath));
+// app.use(express.static(path.join(__dirname, '/games/')));
 
 io.on('connection', (socket) =>{
     let isHost = false
@@ -79,20 +80,18 @@ io.on('connection', (socket) =>{
         console.log(`starting game 1 for room ${isHost.room_id}`)
         io.to(isHost.room_id).emit('startGame1')
         let game = new Game1(io, socket, isHost, 3)
-        
-        io.on("test", ()=>{
-            console.log("test")
-        })
-
-        game.run()
+        let room = rooms.getRoom(isHost.room_id)
+        room.current_game= game
+        // game.run()
+        game.startGame()
     })
 
     socket.on("answer", (answer)=>{
-        console.log("recieved answer")
         let user = users.getUser(socket.id)
         let room = rooms.getRoom(user.room_id)
-        io.to(room.host_id).emit("answer", (socket.id, answer))
+        // console.log("recieved answer " + user.name + " " + answer.data)
 
+        io.to(room.host_id).emit('answer', user, answer)
     })
     
     socket.on('disconnect', ()=>{

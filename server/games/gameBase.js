@@ -1,76 +1,63 @@
-
 class GameBase {
     constructor (io, socket, room, numOfAnswers) {
         this.io = io
         this.socket = socket
         this.room = room
         this.numOfAnswers = numOfAnswers
+        this.userAnswers={}
+        this.num_answered=0
         console.log(numOfAnswers)
 
     }
 
-    async run(){
+    async startGame(){
         let {userQuestions, questionUsers} = this.#createMatchup(this.room.getNumOfUsers(), this.numOfAnswers)
         this.userQuestions = userQuestions
         this.questionUsers = questionUsers
+        this.questionPhase()
         
+    }
+
+    async questionPhase(){
+        this.socket.emit("startCountdown")
+
+        this.socket.on("endCountdown", ()=>{
+            return;
+        })
+
         for (let i = 0; i < this.room.getNumOfUsers(); i++){
-            this.getAnswers(i)
+            this.sendQuestions(i)
         }
     }
 
-    async getAnswers(user_num){
+    async sendQuestions(user_num){
         let user = this.room.users[user_num]
         let questions = this.userQuestions[user_num]
-        let answers = []
-
-
-
         for (let i = 0; i < questions.length; i++){
+            console.log("question " + i + " of user " + user.name)
             let questionNum = questions[i]
             await new Promise((resolve, reject) => {
                 this.io.to(user.id).emit("question", {data: this.getQuestion(questionNum)})
                 resolve()
             })
-            let answer = await new Promise((resolve, reject) => {
-                console.log(`waiting for ${user.name} response for question ${i}`)
-                let socket = this.io.sockets.sockets.get(this.room.host_id)
-                setTimeout(() => resolve('1'))
-                // socket.on("answer", (id, answer)=>{
-                // console.log("id", id)
-                // if (id === user.id){
-                //     resolve(answer)
-                // }
-                // })
-            })
-            answers.push(answer)
+
+            let recievedAnswer = false
+            while(!recievedAnswer){
+                await new Promise((resolve, reject) => {
+                    this.socket.on("hostAnswer", (user, answer)=>{
+                        if (this.room.room_id == user.room_id){
+                            console.log('answer ' + i + " of user " + user.name)
+                            recievedAnswer = true
+                            resolve()
+                        }
+                        else{
+                            console.log("you shouldn't be here")
+                        }
+                    })
+                })
+            }
         }
-
-
-        // questions.forEach(async (questionNum)=>{
-        //     this.io.to(user.id).emit("question", {data: this.getQuestion(questionNum)})
-
-        //     let answer = await new Promise((resolve, reject) => {
-        //         console.log("test")
-        //         this.io.on("answer", (id, answer)=>{
-        //         console.log("id", id)
-        //         if (id === user.id){
-        //             resolve(answer)
-        //         }
-        //         })
-        //     })
-
-        //     console.log("recieved answer:", answer)
-        //     answers.push(answer)
-
-
-        // })
-        console.log(user)
-        console.log(answers)
-        return answers
-
     }
-
     getQuestion(questionNum) {
         return questionNum
     }

@@ -41,6 +41,17 @@ socket.on('newMessage', function (message) {
     document.querySelector('body').appendChild(li)
 })
 
+socket.on('startCountdown', function (time=60) {
+    setTimeout(()=>{}, time);
+    socket.emit("endCountdown")
+})
+
+socket.on('answer', function(user, answer) {    
+    console.log(user)
+    console.log(answer)
+    socket.emit('hostAnswer', user, answer)
+})
+
 
 document.querySelector('#game1-btn').addEventListener('click', function(e) {
     e.preventDefault()

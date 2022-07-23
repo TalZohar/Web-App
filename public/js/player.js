@@ -23,12 +23,11 @@ socket.on('abrupt-disconnect', function (){
 })
 socket.on('startGame1', function(){
     console.log("starting game 1")
-
-    socket.on('question', (data)=>{
-        console.log(data)
-        socket.emit('answer', data)
-    })
-
+})
+socket.on('question', (data)=>{
+    console.log(data)
+    setTimeout(function(){socket.emit('answer', data)}, 5000);
+    
 })
 
 

@@ -32,6 +32,7 @@ class Room {
         this.room_id = room_id
         this.host_id = host_id
         this.users = []
+        this.current_game=null
     }
 
     getUser(id) {
