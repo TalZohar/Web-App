@@ -44,9 +44,9 @@ class GameBase {
             let recievedAnswer = false
             while(!recievedAnswer){
                 await new Promise((resolve, reject) => {
-                    this.socket.on("hostAnswer", (user, answer)=>{
-                        if (this.room.room_id == user.room_id){
-                            console.log('answer ' + i + " of user " + user.name)
+                    this.socket.once(('hostAnswer_'+String(user.id)), (user_recieved, answer)=>{
+                        if (user_recieved.id == user.id){
+                            console.log(i+ ' answer ' + answer.data + " of user " + user.name)
                             recievedAnswer = true
                             resolve()
                         }

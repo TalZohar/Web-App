@@ -26,8 +26,7 @@ socket.on('startGame1', function(){
 })
 socket.on('question', (data)=>{
     console.log(data)
-    setTimeout(function(){socket.emit('answer', data)}, 5000);
-    
+    setTimeout(function(){socket.emit('answer', data)}, 500);
 })
 
 

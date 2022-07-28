@@ -46,10 +46,10 @@ socket.on('startCountdown', function (time=60) {
     socket.emit("endCountdown")
 })
 
-socket.on('answer', function(user, answer) {    
+socket.on('answer', function(user, answer) { 
     console.log(user)
     console.log(answer)
-    socket.emit('hostAnswer', user, answer)
+    socket.emit(('hostAnswer_'+String(user.id)), user, answer)
 })
 
 
