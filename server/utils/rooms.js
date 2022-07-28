@@ -60,7 +60,7 @@ class Room {
         return this.users.length
     }
 
-    getUserList () {
+    getUserList() {
         let namesArray = this.users.map((user) => user.name)
         return namesArray
     }

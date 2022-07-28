@@ -89,8 +89,7 @@ io.on('connection', (socket) =>{
     socket.on("answer", (answer)=>{
         let user = users.getUser(socket.id)
         let room = rooms.getRoom(user.room_id)
-        // console.log("recieved answer " + user.name + " " + answer.data)
-
+        console.log("recieved answer " + user.name + " " + answer.data)
         io.to(room.host_id).emit('answer', user, answer)
     })
     

@@ -1,33 +1,61 @@
+const EventEmitter = require('events')
+
 class GameBase {
     constructor (io, socket, room, numOfAnswers) {
         this.io = io
         this.socket = socket
         this.room = room
-        this.numOfAnswers = numOfAnswers
-        this.userAnswers={}
-        this.num_answered=0
-        console.log(numOfAnswers)
+        this.eventEm = new EventEmitter()
 
+        this.numOfAnswers = numOfAnswers
+        this.userAnswers = new Array(this.room.getNumOfUsers())
+        for (let i = 0; i <this.room.getNumOfUsers(); i++){
+            this.userAnswers[i] = new Array(this.numOfAnswers)
+            for (let j = 0; j < this.numOfAnswers; j++){
+                this.userAnswers[i][j] = null
+            }
+        }
+
+        this.num_answered = new Array(this.room.getNumOfUsers())
+        for (let i = 0; i < this.room.getNumOfUsers(); i++){
+            this.num_answered[i] = 0
+        }
     }
 
     async startGame(){
         let {userQuestions, questionUsers} = this.#createMatchup(this.room.getNumOfUsers(), this.numOfAnswers)
         this.userQuestions = userQuestions
         this.questionUsers = questionUsers
-        this.questionPhase()
-        
+        await this.questionPhase()  
+        this.io.to(this.room.room_id).emit('questionPhaseEnd')
+        console.log("question phase end")
+
     }
 
     async questionPhase(){
-        this.socket.emit("startCountdown")
-
-        this.socket.on("endCountdown", ()=>{
-            return;
-        })
+        this.socket.emit("startCountdown", 1000, 'questionID')
 
         for (let i = 0; i < this.room.getNumOfUsers(); i++){
             this.sendQuestions(i)
         }
+        await new Promise((resolve, reject) => {
+            this.eventEm.on("userFinished", (user)=>{
+                if (this.hasEveryoneAnswered()){
+                    resolve();
+                    return;
+                }
+            })
+            this.socket.once('endCountdown', (id)=>{
+                if (id === "questionID"){
+                    if (!this.hasEveryoneAnswered()){
+                        console.log("time ended before everypeople answered <3")
+                        this.io.to(this.room.room_id).emit('timeEnd')
+                        resolve();
+                        return;
+                    }
+                }
+            })
+        })
     }
 
     async sendQuestions(user_num){
@@ -44,10 +72,11 @@ class GameBase {
             let recievedAnswer = false
             while(!recievedAnswer){
                 await new Promise((resolve, reject) => {
-                    this.socket.on("hostAnswer", (user, answer)=>{
-                        if (this.room.room_id == user.room_id){
-                            console.log('answer ' + i + " of user " + user.name)
+                    this.socket.once("hostAnswer_"+String(user.id), (user_recieved, answer)=>{
+                        if (user_recieved.id == user.id){
+                            console.log(answer.data + ' answer ' + i + " of user " + user.name)
                             recievedAnswer = true
+                            this.userAnswers[user_num][i] = answer.data
                             resolve()
                         }
                         else{
@@ -55,11 +84,28 @@ class GameBase {
                         }
                     })
                 })
+
             }
+            this.num_answered[user_num]++
+            // console.log(this.num_answered)
+            // console.log(this.userAnswers)
+            this.socket.emit("updateUserAnswers", this.num_answered, this.room.getUserList())
         }
+        this.eventEm.emit("userFinished", user)
+
     }
     getQuestion(questionNum) {
         return questionNum
+    }
+
+
+    hasEveryoneAnswered() {
+        for (let i = 0; i < this.room.getNumOfUsers(); i++){
+            if (this.num_answered[i] != this.numOfAnswers){
+                return false
+            }
+        }
+        return true
     }
 
 
