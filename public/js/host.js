@@ -41,15 +41,33 @@ socket.on('newMessage', function (message) {
     document.querySelector('body').appendChild(li)
 })
 
-socket.on('startCountdown', function (time=60) {
-    setTimeout(()=>{}, time);
-    socket.emit("endCountdown")
+
+
+socket.on('startCountdown', function (time, id=null) {
+    setTimeout(()=>{
+        socket.emit("endCountdown", id)
+    }, time);
 })
 
-socket.on('answer', function(user, answer) { 
-    console.log(user)
-    console.log(answer)
-    socket.emit(('hostAnswer_'+String(user.id)), user, answer)
+// socket.on('startGame1', function(){
+
+
+// })
+
+socket.on('answer', function(user, answer) {    
+    console.log(user.name, answer)
+    socket.emit('hostAnswer_'+String(user.id), user, answer)
+})
+socket.on('vote', function(user, vote) {    
+    console.log(user.name, vote)
+    socket.emit('hostVote_'+String(user.room_id), user, vote)
+})
+
+
+
+socket.on('updateUserAnswers', function (num_answered, user_list){
+    console.log("urgent message")
+    console.log("update:", num_answered, user_list)
 })
 
 

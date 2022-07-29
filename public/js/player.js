@@ -23,11 +23,30 @@ socket.on('abrupt-disconnect', function (){
 })
 socket.on('startGame1', function(){
     console.log("starting game 1")
+    
+    socket.on('timeEnd', function(){
+        console.log("recieve time End")
+        socket.off('question')
+        socket.on('question', function(data){
+            console.log("emitting null")
+            socket.emit('answer', {'data':null})
+        })
+    })
+    
+
 })
-socket.on('question', (data)=>{
+socket.on('question', function(data){
     console.log(data)
+    //socket.emit('answer', data)
     setTimeout(function(){socket.emit('answer', data)}, 500);
 })
+socket.on('voting', function(){
+    console.log('get vote')
+    setTimeout(function(){socket.emit('vote', 0)}, 500);
+})
+
+
+
 
 
 document.querySelector('#submit-btn').addEventListener('click', function(e) {

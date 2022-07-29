@@ -79,21 +79,25 @@ io.on('connection', (socket) =>{
     socket.on('startingGame1', () => {
         console.log(`starting game 1 for room ${isHost.room_id}`)
         io.to(isHost.room_id).emit('startGame1')
-        let game = new Game1(io, socket, isHost, 3)
+        let game = new Game1(io, socket, isHost, 2)
         let room = rooms.getRoom(isHost.room_id)
         room.current_game= game
-        // game.run()
         game.startGame()
     })
 
     socket.on("answer", (answer)=>{
         let user = users.getUser(socket.id)
         let room = rooms.getRoom(user.room_id)
-        console.log("recieved answer " + user.name + " " + answer.data)
-
+        // console.log("recieved answer " + user.name + " " + answer.data)
         io.to(room.host_id).emit('answer', user, answer)
     })
-    
+
+    socket.on("vote", (vote)=>{
+        let user = users.getUser(socket.id)
+        let room = rooms.getRoom(user.room_id)
+        io.to(room.host_id).emit('vote', user, vote)
+    })
+
     socket.on('disconnect', ()=>{
         if (isHost){
             let room = rooms.removeRoom(isHost.room_id)
