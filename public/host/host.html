@@ -7,6 +7,8 @@
 </head>
 
 <body>
+  <div id="root"></div>
+
   <p>Room Id: <div id="id"></div></p>
   players:
   <div id="players"></div>
@@ -23,6 +25,7 @@
 
 
   <script src = "/socket.io/socket.io.js"> </script>
-  <script type="text/javascript" src="/js/host.js"> </script>
-</body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.1.0/umd/react.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.1.0/umd/react-dom.development.js"></script>
+  <script type = "module" src="/components/host.js"></script></body>
 </html>
