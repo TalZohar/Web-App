@@ -1,6 +1,7 @@
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 import RoomInfo from "./roomInfo.js";
+import Chat from "./chat.js";
 'use strict';
 
 var socket = io();
@@ -45,23 +46,12 @@ function Host() {
 
         socket.on('updateUsersList', function (users) {
             setUsers(users);
-            var ol = document.createElement('ol');
-
-            users.forEach(function (user) {
-                var li = document.createElement('li');
-                li.innerHTML = user;
-                ol.appendChild(li);
-            });
-
-            var usersList = document.querySelector('#players');
-            usersList.innerHTML = "";
-            usersList.appendChild(ol);
         });
 
         socket.on('newMessage', function (message) {
             console.log("newMessage", message);
             var li = document.createElement('li');
-            li.innerText = message.from + ': ' + message.text;
+            li.innerText = message.from + ": " + message.text;
 
             document.querySelector('body').appendChild(li);
         });
@@ -83,6 +73,11 @@ function Host() {
             console.log(user);
             console.log(answer);
             socket.emit('hostAnswer_' + String(user.id), user, answer);
+        });
+
+        socket.on('vote', function (user, vote) {
+            console.log(user.name, vote);
+            socket.emit('hostVote_' + String(user.room_id), user, vote);
         });
 
         socket.on('updateUserAnswers', function (num_answered, user_list) {
@@ -107,25 +102,26 @@ function Host() {
     };
 
     return React.createElement(
-        'div',
+        "div",
         null,
+        React.createElement(Chat, { socket: socket }),
         React.createElement(RoomInfo, { roomId: roomId, users: users }),
         React.createElement(
-            'p',
+            "p",
             null,
-            'Connected: ',
+            "Connected: ",
             '' + isConnected
         ),
         React.createElement(
-            'p',
+            "p",
             null,
-            'Last pong: ',
+            "Last pong: ",
             lastPong || '-'
         ),
         React.createElement(
-            'button',
+            "button",
             { onClick: sendPing },
-            'Send ping'
+            "Send ping"
         )
     );
 }

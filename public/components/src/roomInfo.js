@@ -16,14 +16,19 @@ function getUsersHTML(users){
 
 function RoomInfo(props) {
     const {roomId, users} = props
-  
+    let usersAndId = []
+    if (users){
+        for (let i = 0; i < users.length; i++){
+            usersAndId.push({user: users[i],id: i})
+        }
+    }
     return (
       <div>
         <p>id: {roomId}</p>
         <p>users: </p>
         {users
-            ?  users.map(user => {
-                return <li key="user">{user}</li>;
+            ?  usersAndId.map(user => {
+                return <li key={user.id}>{user.user}</li>;
               })
             : <p> No players joined yet</p>
         }

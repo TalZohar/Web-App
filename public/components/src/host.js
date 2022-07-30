@@ -1,4 +1,5 @@
 import RoomInfo from "./roomInfo.js";
+import Chat from "./chat.js";
 'use strict';
 
 let socket = io();
@@ -28,17 +29,6 @@ function Host() {
         
         socket.on('updateUsersList', function (users){
             setUsers(users)
-            let ol = document.createElement('ol')
-        
-            users.forEach(function (user){
-                let li = document.createElement('li')
-                li.innerHTML = user;
-                ol.appendChild(li)
-            })
-            
-            let usersList = document.querySelector('#players')
-            usersList.innerHTML = "";
-            usersList.appendChild(ol)
         })
         
         
@@ -68,6 +58,11 @@ function Host() {
             console.log(answer)
             socket.emit('hostAnswer_'+String(user.id), user, answer)
         })
+
+        socket.on('vote', function(user, vote) {    
+            console.log(user.name, vote)
+            socket.emit('hostVote_'+String(user.room_id), user, vote)
+        })
         
         
         socket.on('updateUserAnswers', function (num_answered, user_list){
@@ -94,6 +89,7 @@ function Host() {
   
     return (
       <div>
+        <Chat socket={socket}/>
         <RoomInfo roomId={roomId} users={users}/>
         <p>Connected: { '' + isConnected }</p>
         <p>Last pong: { lastPong || '-' }</p>

@@ -18,7 +18,12 @@ function RoomInfo(props) {
     var roomId = props.roomId,
         users = props.users;
 
-
+    var usersAndId = [];
+    if (users) {
+        for (var i = 0; i < users.length; i++) {
+            usersAndId.push({ user: users[i], id: i });
+        }
+    }
     return React.createElement(
         'div',
         null,
@@ -33,11 +38,11 @@ function RoomInfo(props) {
             null,
             'users: '
         ),
-        users ? users.map(function (user) {
+        users ? usersAndId.map(function (user) {
             return React.createElement(
                 'li',
-                { key: 'user' },
-                user
+                { key: user.id },
+                user.user
             );
         }) : React.createElement(
             'p',
