@@ -24,7 +24,7 @@ function RoomInfo(props) {
     }
     return (
       <div>
-        <p>id: {roomId}</p>
+        <p>Room Id: {roomId}</p>
         <p>users: </p>
         {users
             ?  usersAndId.map(user => {

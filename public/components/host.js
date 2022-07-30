@@ -2,6 +2,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 import RoomInfo from "./roomInfo.js";
 import Chat from "./chat.js";
+import Lobby from "./lobby.js";
 'use strict';
 
 var socket = io();
@@ -27,6 +28,11 @@ function Host() {
         lastPong = _React$useState8[0],
         setLastPong = _React$useState8[1];
 
+    var _React$useState9 = React.useState(null),
+        _React$useState10 = _slicedToArray(_React$useState9, 2),
+        isLobby = _React$useState10[0],
+        setisLobby = _React$useState10[1];
+
     React.useEffect(function () {
 
         socket.on('connect', function () {
@@ -42,18 +48,11 @@ function Host() {
                 }
             });
             setRoomId(params.room_id);
+            setisLobby(true);
         });
 
         socket.on('updateUsersList', function (users) {
             setUsers(users);
-        });
-
-        socket.on('newMessage', function (message) {
-            console.log("newMessage", message);
-            var li = document.createElement('li');
-            li.innerText = message.from + ": " + message.text;
-
-            document.querySelector('body').appendChild(li);
         });
 
         socket.on('startCountdown', function (time) {
@@ -63,11 +62,6 @@ function Host() {
                 socket.emit("endCountdown", id);
             }, time);
         });
-
-        // socket.on('startGame1', function(){
-
-
-        // })
 
         socket.on('answer', function (user, answer) {
             console.log(user);
@@ -85,10 +79,12 @@ function Host() {
             console.log("update:", num_answered, user_list);
         });
 
-        document.querySelector('#game1-btn').addEventListener('click', function (e) {
-            e.preventDefault();
-            socket.emit("startingGame1");
-        });
+        // document.querySelector('#game1-btn').addEventListener('click', function(e) {
+        //     e.preventDefault()
+        //     socket.emit("startingGame1")
+        //     startGameCallback(1)
+        // })
+
 
         return function () {
             socket.off('connect');
@@ -101,27 +97,24 @@ function Host() {
         socket.emit('ping');
     };
 
+    // return (
+    //   <div>
+    //     <Chat socket={socket}/>
+    //     <RoomInfo roomId={roomId} users={users}/>
+    //     <p>Connected: { '' + isConnected }</p>
+    //     <p>Last pong: { lastPong || '-' }</p>
+    //     <button onClick={ sendPing }>Send ping</button>
+    //   </div>
+    // );
     return React.createElement(
         "div",
         null,
-        React.createElement(Chat, { socket: socket }),
-        React.createElement(RoomInfo, { roomId: roomId, users: users }),
-        React.createElement(
+        isLobby ? React.createElement(Lobby, { socket: socket, room_id: roomId, users: users, startGameCallback: function startGameCallback(gameNum) {
+                setisLobby(false);
+            } }) : React.createElement(
             "p",
             null,
-            "Connected: ",
-            '' + isConnected
-        ),
-        React.createElement(
-            "p",
-            null,
-            "Last pong: ",
-            lastPong || '-'
-        ),
-        React.createElement(
-            "button",
-            { onClick: sendPing },
-            "Send ping"
+            "game"
         )
     );
 }

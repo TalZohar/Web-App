@@ -78,9 +78,9 @@ io.on('connection', (socket) =>{
 
     socket.on('startingGame1', () => {
         console.log(`starting game 1 for room ${isHost.room_id}`)
-        io.to(isHost.room_id).emit('startGame1')
         let game = new Game1(io, socket, isHost, 2)
         let room = rooms.getRoom(isHost.room_id)
+        io.to(isHost.room_id).emit('startGame1')
         room.current_game= game
         game.startGame()
     })

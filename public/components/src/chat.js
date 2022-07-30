@@ -1,3 +1,5 @@
+// import uuidv4 from 'uuid/v4'
+// import { v4 as uuidv4 } from 'uuid';
 'use strict';
 
 function Chat(props) {
@@ -6,28 +8,23 @@ function Chat(props) {
 
     React.useEffect(() => {
         socket.on('newMessage', function (message) {
-            let temp = [...messages]
-            message["key"]=messages.length
-            temp.push(message)
-            console.log(temp)
+            message["key"]= Math.floor(Math.random() * 10000);
             setMessages((prev)=>{
-                prev.push(message)
-                return prev
+                // prev.push(message)
+                return [...prev, message]
             })
-            let li = document.createElement('li')
-            li.innerText = `${message.from}: ${message.text}`
         
-            document.querySelector('body').appendChild(li)
         })
         
     }, [])
 
     return (      
     <div>
+
         <p>Chat: </p>
         {(messages.length > 0) ?
         messages.map(m => {
-                return <li key={m.key}> {m.from}: {m.text}"</li>;
+                return <li key={m.key}> {m.from}: {m.text}</li>;
         })
         :
         <p>no Messages</p>

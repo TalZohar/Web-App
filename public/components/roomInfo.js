@@ -30,7 +30,7 @@ function RoomInfo(props) {
         React.createElement(
             'p',
             null,
-            'id: ',
+            'Room Id: ',
             roomId
         ),
         React.createElement(

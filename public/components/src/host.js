@@ -1,5 +1,6 @@
 import RoomInfo from "./roomInfo.js";
 import Chat from "./chat.js";
+import Lobby from "./lobby.js";
 'use strict';
 
 let socket = io();
@@ -9,6 +10,7 @@ function Host() {
     const [users, setUsers] =  React.useState(null);
     const [isConnected, setIsConnected] = React.useState(socket.connected);
     const [lastPong, setLastPong] = React.useState(null);
+    const [isLobby, setisLobby] = React.useState(null);
   
     React.useEffect(() => {
 
@@ -25,6 +27,7 @@ function Host() {
                 }
             })
             setRoomId(params.room_id)
+            setisLobby(true)
         })
         
         socket.on('updateUsersList', function (users){
@@ -32,26 +35,11 @@ function Host() {
         })
         
         
-        socket.on('newMessage', function (message) {
-            console.log("newMessage", message)
-            let li = document.createElement('li')
-            li.innerText = `${message.from}: ${message.text}`
-        
-            document.querySelector('body').appendChild(li)
-        })
-        
-        
-        
         socket.on('startCountdown', function (time, id=null) {
             setTimeout(()=>{
                 socket.emit("endCountdown", id)
             }, time);
         })
-        
-        // socket.on('startGame1', function(){
-        
-        
-        // })
         
         socket.on('answer', function(user, answer) {    
             console.log(user)
@@ -69,12 +57,13 @@ function Host() {
             console.log("urgent message")
             console.log("update:", num_answered, user_list)
         })
+
+        // document.querySelector('#game1-btn').addEventListener('click', function(e) {
+        //     e.preventDefault()
+        //     socket.emit("startingGame1")
+        //     startGameCallback(1)
+        // })
         
-        
-        document.querySelector('#game1-btn').addEventListener('click', function(e) {
-            e.preventDefault()
-            socket.emit("startingGame1")
-        })
 
         return () => {
             socket.off('connect');
@@ -87,15 +76,24 @@ function Host() {
       socket.emit('ping');
     }
   
+    // return (
+    //   <div>
+    //     <Chat socket={socket}/>
+    //     <RoomInfo roomId={roomId} users={users}/>
+    //     <p>Connected: { '' + isConnected }</p>
+    //     <p>Last pong: { lastPong || '-' }</p>
+    //     <button onClick={ sendPing }>Send ping</button>
+    //   </div>
+    // );
     return (
-      <div>
-        <Chat socket={socket}/>
-        <RoomInfo roomId={roomId} users={users}/>
-        <p>Connected: { '' + isConnected }</p>
-        <p>Last pong: { lastPong || '-' }</p>
-        <button onClick={ sendPing }>Send ping</button>
-      </div>
-    );
+        <div>
+            {(isLobby) ? (
+                <Lobby socket={socket} room_id={roomId} users={users} startGameCallback={(gameNum)=>{setisLobby(false)}}/>) 
+            :(
+                <p>game</p>
+            )}
+        </div>
+      );
 
 }
 
