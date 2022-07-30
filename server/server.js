@@ -91,13 +91,12 @@ io.on('connection', (socket) =>{
         // console.log("recieved answer " + user.name + " " + answer.data)
         io.to(room.host_id).emit('answer', user, answer)
     })
-
     socket.on("vote", (vote)=>{
         let user = users.getUser(socket.id)
         let room = rooms.getRoom(user.room_id)
         io.to(room.host_id).emit('vote', user, vote)
     })
-
+    
     socket.on('disconnect', ()=>{
         if (isHost){
             let room = rooms.removeRoom(isHost.room_id)
