@@ -23,24 +23,33 @@ function Answers_Text(props) {
     };
     return React.createElement(
         'div',
-        null,
+        { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
         React.createElement(
-            'p',
-            null,
-            text
-        ),
-        React.createElement('input', {
-            type: 'text',
-            id: 'inputAnswer',
-            onChange: handleChange,
-            value: answer
-        }),
-        React.createElement(
-            'button',
-            { onClick: function onClick(e) {
-                    return onAnswer(e);
-                } },
-            ' Submit '
+            'div',
+            { 'class': 'jumbotron' },
+            React.createElement(
+                'h3',
+                null,
+                'Answer the following question:'
+            ),
+            React.createElement(
+                'p',
+                null,
+                text
+            ),
+            React.createElement('input', {
+                type: 'text',
+                id: 'inputAnswer',
+                onChange: handleChange,
+                value: answer
+            }),
+            React.createElement(
+                'button',
+                { onClick: function onClick(e) {
+                        return onAnswer(e);
+                    } },
+                ' Submit '
+            )
         )
     );
 }
@@ -79,26 +88,41 @@ function Answers_Meme(props) {
     console.log(image);
     return React.createElement(
         'div',
-        null,
-        React.createElement('input', {
-            type: 'text',
-            id: 'upperAnswer',
-            onChange: handleChangeUpper,
-            value: answerUpper
-        }),
-        React.createElement('img', { src: 'data:image/jpeg;base64,' + image }),
-        React.createElement('input', {
-            type: 'text',
-            id: 'lowerAnswer',
-            onChange: handleChangeLower,
-            value: answerLower
-        }),
+        { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
         React.createElement(
-            'button',
-            { onClick: function onClick(e) {
-                    return onAnswer(e);
-                } },
-            ' Submit '
+            'div',
+            { 'class': 'jumbotron' },
+            React.createElement(
+                'h3',
+                null,
+                'Caption the meme:'
+            ),
+            React.createElement('input', {
+                type: 'text',
+                id: 'upperAnswer',
+                onChange: handleChangeUpper,
+                value: answerUpper,
+                placeholder: 'Enter upper caption'
+            }),
+            React.createElement('input', {
+                type: 'text',
+                id: 'lowerAnswer',
+                onChange: handleChangeLower,
+                value: answerLower,
+                placeholder: 'Enter lower caption'
+            }),
+            React.createElement(
+                'button',
+                { onClick: function onClick(e) {
+                        return onAnswer(e);
+                    } },
+                ' Submit '
+            ),
+            React.createElement(
+                'div',
+                { 'class': 'col-md-4 px-0' },
+                React.createElement('img', { src: 'data:image/jpeg;base64,' + image, 'class': 'rounded mx-auto d-block', alt: '...' })
+            )
         )
     );
 }
@@ -168,19 +192,19 @@ function Answers_Player(props) {
 
     return React.createElement(
         'div',
-        null,
+        { 'class': 'text-center vsc-initialized container-fluid' },
         recievedAllAnswers ? React.createElement(
-            'p',
-            null,
-            ' Waiting for other players to answer '
+            'div',
+            { 'class': 'alert alert-info' },
+            React.createElement(
+                'h2',
+                null,
+                'Waiting for other players to answer'
+            ),
+            ' '
         ) : React.createElement(
             'div',
             null,
-            React.createElement(
-                'p',
-                null,
-                'Answer the following question:'
-            ),
             getQuestionHTML()
         )
     );
@@ -230,41 +254,48 @@ function Game_Player(props) {
 
     return React.createElement(
         'div',
-        null,
-        React.createElement(
-            'p',
-            null,
-            'Game'
-        ),
+        { 'class': 'text-center vsc-initialized container-fluid' },
         gameEnded ? React.createElement(
-            'p',
-            null,
-            'Game Has Ended'
+            'div',
+            { 'class': 'alert alert-info' },
+            React.createElement(
+                'h2',
+                null,
+                'Game Has Ended'
+            )
         ) : isQuestionPhase ? React.createElement(Answers_Player, { socket: socket }) : recievedVote ? React.createElement(
-            'p',
-            null,
-            ' Every vote counts! '
+            'div',
+            { 'class': 'alert alert-info' },
+            React.createElement(
+                'h2',
+                null,
+                'Every vote counts! '
+            )
         ) : React.createElement(
             'div',
-            null,
+            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
             React.createElement(
-                'p',
-                null,
-                'Which Answer is better?'
-            ),
-            React.createElement(
-                'button',
-                { onClick: function onClick(e) {
-                        return onVote(e, 0);
-                    } },
-                ' Left '
-            ),
-            React.createElement(
-                'button',
-                { onClick: function onClick(e) {
-                        return onVote(e, 1);
-                    } },
-                ' Right '
+                'div',
+                { 'class': 'jumbotron' },
+                React.createElement(
+                    'h2',
+                    null,
+                    'Which Answer is better?'
+                ),
+                React.createElement(
+                    'button',
+                    { onClick: function onClick(e) {
+                            return onVote(e, 0);
+                        } },
+                    ' Answer 1 '
+                ),
+                React.createElement(
+                    'button',
+                    { onClick: function onClick(e) {
+                            return onVote(e, 1);
+                        } },
+                    ' Answer 2 '
+                )
             )
         )
     );

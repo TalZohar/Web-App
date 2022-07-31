@@ -48,8 +48,8 @@ function Host() {
 
     return (
         <div>
-            <nav className="navbar navbar-dark" style={{"backgroundColor": "#C95B0C"}}>
-            <a className="navbar-brand" href="#">Navbar</a>
+            <nav className="navbar navbar-dark" style={{"backgroundColor": "black"}}>
+            <a className="navbar-brand" href="#">web-app</a>
             </nav>
             {(isLobby) ? (
                 <Lobby socket={socket} room_id={roomId} users={users} startGameCallback={(gameNum)=>{setisLobby(false)}}/>) 

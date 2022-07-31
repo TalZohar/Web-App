@@ -25,6 +25,7 @@ function RoomInfo(props) {
     return (
       <div>
         <h2><b>Room Id:</b> {roomId}</h2>
+        <hr></hr>
         <h4>Players: </h4>
         {users
             ?  usersAndId.map(user => {

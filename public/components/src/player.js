@@ -57,20 +57,18 @@ function Player() {
     
     return (
         <div >
-              <nav className="navbar navbar-dark" style={{"backgroundColor": "#C95B0C"}}>
-            <a className="navbar-brand" href="#">Navbar</a>
-            </nav>
-            {(isLobby) ? (
-                <div className="h-100 d-flex align-items-center justify-content-center" >
-                    <div className="grid">
 
-                    <div className="d-flex row align-items-center  justify-content-center">
-                        <h2>Welcome to the room lobby</h2>
-                    </div>
-                    <div className="d-flex row align-items-center  justify-content-center">
-                    <input  type = "text" name="message" placeholder="message" />
-                    <button onClick={event => msgSubmit(event)}> Submit </button>
-                    </div>
+            {(isLobby) ? (
+                <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column " style={{"align-items": "center"}}>
+                    <div class="jumbotron" style={{"backgroundColor":"#FFFFFF","width":"50%"}}> 
+                    {/* <div className="grid"> */}
+                        <div className="d-flex row align-items-center  justify-content-center">
+                            <h2>Welcome to the room lobby</h2>
+                        </div>
+                        <div className="d-flex row align-items-center  justify-content-center">
+                            <input  type = "text" name="message" placeholder="message" />
+                            <button onClick={event => msgSubmit(event)}> Submit </button>
+                        </div>
                     </div>
 
                 </div>

@@ -10,7 +10,7 @@ function Player_Progress(props) {
     
     return (
     user_list.map(function(e, i) {
-        return <li key={i}> {e}: {num_answered[i]}</li>;
+        return (<li key={i}> {e}: {num_answered[i]}</li>);
       })
     )
 }
@@ -173,14 +173,22 @@ function Game_Host(props) {
     }, []);
 
     return (
-        <div>
-            <p>Game</p>
+        <div class="text-center vsc-initialized container-fluid">
+            {/* <p>Game</p> */}
             {(isQuestionPhase) ? (
-                <div>
-                    <p>Answer your Questions</p>
+                <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
+                    <div class="jumbotron"> 
+                    <h3>Answer Your Questions</h3>
+                     <hr></hr>
                     <p>Time Left:</p>
                     <Timer initialMinute = {timeState.time_minutes} initialSeconds= {timeState.time_seconds} endCallback={()=>{socket.emit("endCountdown", timeState.id)}}/>
+                    </div>
+
+                    <div class="text-left jumbotron" style={{opacity: 0.9, padding: "0.1%"}}>
+
                     <Player_Progress num_answered={num_answered} user_list={user_list} />
+                    </div>
+
                 </div>
             ):(
                 <Voting_Host socket={socket} user_list={user_list} goToLobby={goToLobby}/>

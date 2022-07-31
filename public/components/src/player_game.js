@@ -13,7 +13,9 @@ function Answers_Text(props){
         setAnswer((prev)=>{return ''})
     }
     return (
-        <div>
+        <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
+        <div class="jumbotron">
+            <h3>Answer the following question:</h3>
             <p>{text}</p>
             <input 
             type="text"
@@ -22,6 +24,7 @@ function Answers_Text(props){
             value = {answer}
             />
             <button onClick={(e)=>onAnswer(e)}> Submit </button>
+        </div>
         </div>
     )
     
@@ -47,23 +50,32 @@ function Answers_Meme(props){
     }
     console.log(image)
     return (
-        <div>
+        <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
+            <div class="jumbotron">
+
+            <h3>Caption the meme:</h3>
             <input 
             type="text"
             id="upperAnswer"
             onChange={handleChangeUpper}
             value = {answerUpper}
+            placeholder={'Enter upper caption'}
             />
-            
-            <img src = {'data:image/jpeg;base64,'+image}></img>
-
             <input 
             type="text"
             id="lowerAnswer"
             onChange={handleChangeLower}
             value = {answerLower}
+            placeholder={'Enter lower caption'}
             />
             <button onClick={(e)=>onAnswer(e)}> Submit </button>
+            
+            <div class="col-md-4 px-0">
+                <img src = {'data:image/jpeg;base64,'+image} class="rounded mx-auto d-block" alt="..."></img>
+            </div>
+            
+
+            </div> 
         </div>
     )
 }
@@ -125,14 +137,14 @@ function Answers_Player(props){
     }
 
     return (      
-        <div>
+        <div class="text-center vsc-initialized container-fluid">
             {(recievedAllAnswers) ? (
-                 <p> Waiting for other players to answer </p>)
-            :(
-                <div>
-                    <p>Answer the following question:</p>
-                    {getQuestionHTML()}
-                </div>
+                 <div class="alert alert-info">
+                  <h2>Waiting for other players to answer</h2> </div>)
+            :(                        
+              <div>{getQuestionHTML()}</div>
+                    
+                
             )}
 
         </div>);
@@ -173,20 +185,27 @@ function Game_Player(props) {
 
 
     return (      
-    <div>
-        <p>Game</p>
+    <div class="text-center vsc-initialized container-fluid">
         {(gameEnded) ? (
-            <p>Game Has Ended</p>
+            <div class="alert alert-info">
+                <h2>Game Has Ended</h2> 
+            </div>
+            
         ):(
             (isQuestionPhase) ? (<Answers_Player socket={socket}/>) 
             :(
                 (recievedVote) ? 
-                (<p> Every vote counts! </p>):
+                (<div class="alert alert-info">
+                    <h2>Every vote counts! </h2> 
+                </div>
+                ):
                 (              
-                <div>
-                    <p>Which Answer is better?</p>
-                    <button onClick={(e)=>onVote(e,0)}> Left </button>
-                    <button onClick={(e)=>onVote(e,1)}> Right </button>
+                <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
+                    <div class="jumbotron"> 
+                        <h2>Which Answer is better?</h2>
+                        <button onClick={(e)=>onVote(e,0)}> Answer 1 </button>
+                        <button onClick={(e)=>onVote(e,1)}> Answer 2 </button>
+                    </div>
                 </div>
                 )
             )

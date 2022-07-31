@@ -38,6 +38,7 @@ function RoomInfo(props) {
             ' ',
             roomId
         ),
+        React.createElement('hr', null),
         React.createElement(
             'h4',
             null,

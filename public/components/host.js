@@ -62,11 +62,11 @@ function Host() {
         null,
         React.createElement(
             "nav",
-            { className: "navbar navbar-dark", style: { "backgroundColor": "#C95B0C" } },
+            { className: "navbar navbar-dark", style: { "backgroundColor": "black" } },
             React.createElement(
                 "a",
                 { className: "navbar-brand", href: "#" },
-                "Navbar"
+                "web-app"
             )
         ),
         isLobby ? React.createElement(Lobby, { socket: socket, room_id: roomId, users: users, startGameCallback: function startGameCallback(gameNum) {

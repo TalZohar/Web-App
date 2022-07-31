@@ -291,29 +291,33 @@ function Game_Host(props) {
 
     return React.createElement(
         'div',
-        null,
-        React.createElement(
-            'p',
-            null,
-            'Game'
-        ),
+        { 'class': 'text-center vsc-initialized container-fluid' },
         isQuestionPhase ? React.createElement(
             'div',
-            null,
+            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
             React.createElement(
-                'p',
-                null,
-                'Answer your Questions'
+                'div',
+                { 'class': 'jumbotron' },
+                React.createElement(
+                    'h3',
+                    null,
+                    'Answer Your Questions'
+                ),
+                React.createElement('hr', null),
+                React.createElement(
+                    'p',
+                    null,
+                    'Time Left:'
+                ),
+                React.createElement(Timer, { initialMinute: timeState.time_minutes, initialSeconds: timeState.time_seconds, endCallback: function endCallback() {
+                        socket.emit("endCountdown", timeState.id);
+                    } })
             ),
             React.createElement(
-                'p',
-                null,
-                'Time Left:'
-            ),
-            React.createElement(Timer, { initialMinute: timeState.time_minutes, initialSeconds: timeState.time_seconds, endCallback: function endCallback() {
-                    socket.emit("endCountdown", timeState.id);
-                } }),
-            React.createElement(Player_Progress, { num_answered: num_answered, user_list: user_list })
+                'div',
+                { 'class': 'text-left jumbotron', style: { opacity: 0.9, padding: "0.1%" } },
+                React.createElement(Player_Progress, { num_answered: num_answered, user_list: user_list })
+            )
         ) : React.createElement(Voting_Host, { socket: socket, user_list: user_list, goToLobby: goToLobby })
     );
 }

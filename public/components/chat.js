@@ -26,7 +26,7 @@ function Chat(props) {
 
     return React.createElement(
         'div',
-        { 'class': 'chat' },
+        { 'class': 'jumbotron ', style: { "opacity": 0.9, "justify-content": "space-around", "margin": "10px", "padding": "20px", "border-radius": "30px", "display": "flex", "flex-direction": "column", "height": "100%" } },
         React.createElement(
             'h2',
             null,

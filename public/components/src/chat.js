@@ -19,7 +19,7 @@ function Chat(props) {
     }, [])
 
     return (      
-    <div class='chat'>
+    <div class="jumbotron "style={{"opacity": 0.9, "justify-content": "space-around","margin":"10px","padding":"20px","border-radius":"30px","display":"flex","flex-direction": "column","height":"100%"}}>
 
         <h2>Chat: </h2>
         {(messages.length > 0) ?

@@ -64,21 +64,12 @@ function Player() {
     return React.createElement(
         'div',
         null,
-        React.createElement(
-            'nav',
-            { className: 'navbar navbar-dark', style: { "backgroundColor": "#C95B0C" } },
-            React.createElement(
-                'a',
-                { className: 'navbar-brand', href: '#' },
-                'Navbar'
-            )
-        ),
         isLobby ? React.createElement(
             'div',
-            { className: 'h-100 d-flex align-items-center justify-content-center' },
+            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ', style: { "align-items": "center" } },
             React.createElement(
                 'div',
-                { className: 'grid' },
+                { 'class': 'jumbotron', style: { "backgroundColor": "#FFFFFF", "width": "50%" } },
                 React.createElement(
                     'div',
                     { className: 'd-flex row align-items-center  justify-content-center' },
