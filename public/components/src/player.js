@@ -64,13 +64,13 @@ function Player() {
                 <div className="h-100 d-flex align-items-center justify-content-center" >
                     <div className="grid">
 
-                    <div className="row align-items-center  justify-content-center">
-                        <p>Welcome to the room lobby</p>
+                    <div className="d-flex row align-items-center  justify-content-center">
+                        <h2>Welcome to the room lobby</h2>
                     </div>
-                        <div className="row align-items-center  justify-content-center">
-                        <input type = "text" name="message" placeholder="message" />
-                        <button onClick={event => msgSubmit(event)}> Submit </button>
-                        </div>
+                    <div className="d-flex row align-items-center  justify-content-center">
+                    <input  type = "text" name="message" placeholder="message" />
+                    <button onClick={event => msgSubmit(event)}> Submit </button>
+                    </div>
                     </div>
 
                 </div>

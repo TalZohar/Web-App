@@ -81,16 +81,16 @@ function Player() {
                 { className: 'grid' },
                 React.createElement(
                     'div',
-                    { className: 'row align-items-center  justify-content-center' },
+                    { className: 'd-flex row align-items-center  justify-content-center' },
                     React.createElement(
-                        'p',
+                        'h2',
                         null,
                         'Welcome to the room lobby'
                     )
                 ),
                 React.createElement(
                     'div',
-                    { className: 'row align-items-center  justify-content-center' },
+                    { className: 'd-flex row align-items-center  justify-content-center' },
                     React.createElement('input', { type: 'text', name: 'message', placeholder: 'message' }),
                     React.createElement(
                         'button',

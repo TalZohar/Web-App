@@ -21,9 +21,9 @@ function Lobby(props) {
         <div class="col-md-6">
         <RoomInfo roomId={room_id} users={users}/>
         <div class="btn-group btn-group-justified">
-        <button class="btn btn-primary" onClick={event => startGame(event,1)}> Start Game 1 </button>
-        <button class="btn btn-primary" onClick={event => startGame(event,2)}> Start Game 2 </button>
-        <button  class="btn btn-primary" onClick={event => startGame(event,3)}> Start Game 3 </button>        
+        <button class="btn btn-dark" onClick={event => startGame(event,1)}> Start Game 1 </button>
+        <button class="btn btn-dark" onClick={event => startGame(event,2)}> Start Game 2 </button>
+        <button  class="btn btn-dark" onClick={event => startGame(event,3)}> Start Game 3 </button>        
         </div>
         </div>
         </div>

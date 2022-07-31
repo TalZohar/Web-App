@@ -24,8 +24,8 @@ function RoomInfo(props) {
     }
     return (
       <div>
-        <p>Room Id: {roomId}</p>
-        <p>users: </p>
+        <h2><b>Room Id:</b> {roomId}</h2>
+        <h4>Players: </h4>
         {users
             ?  usersAndId.map(user => {
                 return <li key={user.id}>{user.user}</li>;

@@ -36,21 +36,21 @@ function Lobby(props) {
                     { "class": "btn-group btn-group-justified" },
                     React.createElement(
                         "button",
-                        { "class": "btn btn-primary", onClick: function onClick(event) {
+                        { "class": "btn btn-dark", onClick: function onClick(event) {
                                 return startGame(event, 1);
                             } },
                         " Start Game 1 "
                     ),
                     React.createElement(
                         "button",
-                        { "class": "btn btn-primary", onClick: function onClick(event) {
+                        { "class": "btn btn-dark", onClick: function onClick(event) {
                                 return startGame(event, 2);
                             } },
                         " Start Game 2 "
                     ),
                     React.createElement(
                         "button",
-                        { "class": "btn btn-primary", onClick: function onClick(event) {
+                        { "class": "btn btn-dark", onClick: function onClick(event) {
                                 return startGame(event, 3);
                             } },
                         " Start Game 3 "

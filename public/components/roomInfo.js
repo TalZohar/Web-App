@@ -28,15 +28,20 @@ function RoomInfo(props) {
         'div',
         null,
         React.createElement(
-            'p',
+            'h2',
             null,
-            'Room Id: ',
+            React.createElement(
+                'b',
+                null,
+                'Room Id:'
+            ),
+            ' ',
             roomId
         ),
         React.createElement(
-            'p',
+            'h4',
             null,
-            'users: '
+            'Players: '
         ),
         users ? usersAndId.map(function (user) {
             return React.createElement(

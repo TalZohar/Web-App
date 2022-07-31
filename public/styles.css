@@ -7,7 +7,11 @@
     height: 100%;
     width: 100%;
     background-color:#f0ab61;
-    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* position: absolute; */
+    align-items: center;
 }
 
 .chat{
@@ -16,10 +20,29 @@
     margin: 10px;
     padding-left: 30px;
     background-color:#ffffff;
-    position: absolute;
     display: flex;
     border-radius:30px;
     flex-direction: column;
     justify-content: space-around;
     /* align-items:center; */
+}
+
+.input_bar{
+    top: 100px;
+    position: absolute;
+    width: 280px;
+    transition: .5s;
+    text-align: center;
+}
+
+.center_button{
+    top: 100px;
+    /* position: absolute; */
+    width: 280px;
+    transition: .5s;
+    text-align: center;
+    justify-content: space-around;
+    border-radius:10px;
+    padding:10px;
+    margin:1%
 }
