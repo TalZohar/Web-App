@@ -26,9 +26,9 @@ function Chat(props) {
 
     return React.createElement(
         'div',
-        null,
+        { 'class': 'chat' },
         React.createElement(
-            'p',
+            'h2',
             null,
             'Chat: '
         ),
@@ -37,7 +37,11 @@ function Chat(props) {
                 'li',
                 { key: m.key },
                 ' ',
-                m.from,
+                React.createElement(
+                    'b',
+                    null,
+                    m.from
+                ),
                 ': ',
                 m.text
             );

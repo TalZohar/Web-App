@@ -3,6 +3,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 import RoomInfo from "./roomInfo.js";
 import Chat from "./chat.js";
 import Lobby from "./lobby.js";
+import Game_Host from "./host_game.js";
 'use strict';
 
 var socket = io();
@@ -18,20 +19,10 @@ function Host() {
         users = _React$useState4[0],
         setUsers = _React$useState4[1];
 
-    var _React$useState5 = React.useState(socket.connected),
+    var _React$useState5 = React.useState(null),
         _React$useState6 = _slicedToArray(_React$useState5, 2),
-        isConnected = _React$useState6[0],
-        setIsConnected = _React$useState6[1];
-
-    var _React$useState7 = React.useState(null),
-        _React$useState8 = _slicedToArray(_React$useState7, 2),
-        lastPong = _React$useState8[0],
-        setLastPong = _React$useState8[1];
-
-    var _React$useState9 = React.useState(null),
-        _React$useState10 = _slicedToArray(_React$useState9, 2),
-        isLobby = _React$useState10[0],
-        setisLobby = _React$useState10[1];
+        isLobby = _React$useState6[0],
+        setisLobby = _React$useState6[1];
 
     React.useEffect(function () {
 
@@ -55,67 +46,32 @@ function Host() {
             setUsers(users);
         });
 
-        socket.on('startCountdown', function (time) {
-            var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
-            setTimeout(function () {
-                socket.emit("endCountdown", id);
-            }, time);
-        });
-
-        socket.on('answer', function (user, answer) {
-            console.log(user);
-            console.log(answer);
-            socket.emit('hostAnswer_' + String(user.id), user, answer);
-        });
-
-        socket.on('vote', function (user, vote) {
-            console.log(user.name, vote);
-            socket.emit('hostVote_' + String(user.room_id), user, vote);
-        });
-
-        socket.on('updateUserAnswers', function (num_answered, user_list) {
-            console.log("urgent message");
-            console.log("update:", num_answered, user_list);
-        });
-
-        // document.querySelector('#game1-btn').addEventListener('click', function(e) {
-        //     e.preventDefault()
-        //     socket.emit("startingGame1")
-        //     startGameCallback(1)
-        // })
-
-
         return function () {
             socket.off('connect');
             socket.off('disconnect');
-            socket.off('pong');
         };
     }, []);
 
-    var sendPing = function sendPing() {
-        socket.emit('ping');
+    var goToLobby = function goToLobby() {
+        setisLobby(true);
+        socket.emit('returnToLobby');
     };
 
-    // return (
-    //   <div>
-    //     <Chat socket={socket}/>
-    //     <RoomInfo roomId={roomId} users={users}/>
-    //     <p>Connected: { '' + isConnected }</p>
-    //     <p>Last pong: { lastPong || '-' }</p>
-    //     <button onClick={ sendPing }>Send ping</button>
-    //   </div>
-    // );
     return React.createElement(
         "div",
         null,
+        React.createElement(
+            "nav",
+            { className: "navbar navbar-dark", style: { "backgroundColor": "#C95B0C" } },
+            React.createElement(
+                "a",
+                { className: "navbar-brand", href: "#" },
+                "Navbar"
+            )
+        ),
         isLobby ? React.createElement(Lobby, { socket: socket, room_id: roomId, users: users, startGameCallback: function startGameCallback(gameNum) {
                 setisLobby(false);
-            } }) : React.createElement(
-            "p",
-            null,
-            "game"
-        )
+            } }) : React.createElement(Game_Host, { socket: socket, goToLobby: goToLobby })
     );
 }
 

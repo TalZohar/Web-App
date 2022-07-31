@@ -9,52 +9,53 @@ function Lobby(props) {
         users = props.users,
         startGameCallback = props.startGameCallback;
 
-    // React.useEffect(() => {
 
     var startGame = function startGame(event, game_num) {
         event.preventDefault();
-        socket.emit("startingGame" + String(game_num));
+        socket.emit("startingGame", game_num);
         startGameCallback(game_num);
     };
-
-    // }, [])
 
     return React.createElement(
         "div",
         null,
-        React.createElement(Chat, { socket: socket }),
-        React.createElement(RoomInfo, { roomId: room_id, users: users }),
         React.createElement(
-            "form",
-            null,
+            "div",
+            { "class": "modal-body row" },
             React.createElement(
-                "button",
-                { onClick: function onClick(event) {
-                        return startGame(event, 1);
-                    } },
-                " Start Game 1 "
-            )
-        ),
-        React.createElement(
-            "form",
-            null,
+                "div",
+                { "class": "col-md-6" },
+                React.createElement(Chat, { socket: socket })
+            ),
             React.createElement(
-                "button",
-                { onClick: function onClick(event) {
-                        return startGame(event, 2);
-                    } },
-                " Start Game 2 "
-            )
-        ),
-        React.createElement(
-            "form",
-            null,
-            React.createElement(
-                "button",
-                { onClick: function onClick(event) {
-                        return startGame(event, 3);
-                    } },
-                " Start Game 3 "
+                "div",
+                { "class": "col-md-6" },
+                React.createElement(RoomInfo, { roomId: room_id, users: users }),
+                React.createElement(
+                    "div",
+                    { "class": "btn-group btn-group-justified" },
+                    React.createElement(
+                        "button",
+                        { "class": "btn btn-primary", onClick: function onClick(event) {
+                                return startGame(event, 1);
+                            } },
+                        " Start Game 1 "
+                    ),
+                    React.createElement(
+                        "button",
+                        { "class": "btn btn-primary", onClick: function onClick(event) {
+                                return startGame(event, 2);
+                            } },
+                        " Start Game 2 "
+                    ),
+                    React.createElement(
+                        "button",
+                        { "class": "btn btn-primary", onClick: function onClick(event) {
+                                return startGame(event, 3);
+                            } },
+                        " Start Game 3 "
+                    )
+                )
             )
         )
     );

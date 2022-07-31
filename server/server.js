@@ -9,7 +9,7 @@ const {generateMessage} = require('./utils/message')
 const {isRealString, isValidRoom} = require('./utils/stringCheck');
 const { Users} = require('./utils/users')
 const { Rooms, Room} = require('./utils/rooms')
-const Game1 = require('./games/game1.js')
+const {Game1,Game2,Game3} = require('./games/games.js')
 
 
 // create http server + express + socket
@@ -76,13 +76,23 @@ io.on('connection', (socket) =>{
 
     })
 
-    socket.on('startingGame1', () => {
-        console.log(`starting game 1 for room ${isHost.room_id}`)
-        let game = new Game1(io, socket, isHost, 2)
+    socket.on('startingGame', (game_num) => {
+        console.log(`starting game ${game_num} for room ${isHost.room_id}`)
+        let game=0
+        if(game_num==1){
+            game = new Game1(io, socket, isHost, 2)
+        }
+        else if(game_num==2){
+            game = new Game2(io, socket, isHost, 2)
+        }
+        else if(game_num==3){
+            game = new Game3(io, socket, isHost, 2)
+        }
+         
         let room = rooms.getRoom(isHost.room_id)
-        io.to(isHost.room_id).emit('startGame1')
+        io.to(isHost.room_id).emit('startGame')
         room.current_game= game
-        game.startGame()
+        setTimeout(function(){game.startGame()}, 500);
     })
 
     socket.on("answer", (answer)=>{
@@ -91,6 +101,13 @@ io.on('connection', (socket) =>{
         // console.log("recieved answer " + user.name + " " + answer.data)
         io.to(room.host_id).emit('answer', user, answer)
     })
+
+    socket.on("returnToLobby", ()=>{
+        io.to(isHost.room_id).emit('returnToLobby')
+    })
+
+
+
     socket.on("vote", (vote)=>{
         let user = users.getUser(socket.id)
         let room = rooms.getRoom(user.room_id)

@@ -32,20 +32,9 @@ function Player() {
             window.location.href = '/'
         })
 
-        socket.on('startGame1', function(){
-            console.log("starting game 1")
+        socket.on('startGame', function(){
+            console.log("starting game")
             setisLobby(false)
-        })
-        
-        
-        document.querySelector('#submit-btn').addEventListener('click', function(e) {
-            e.preventDefault()
-            socket.emit("createMessage", {
-                text: document.querySelector('input[name="message"]').value
-            }, function() {
-        
-            })
-            document.querySelector('input[name="message"]').value = ''
         })
 
 
@@ -55,29 +44,45 @@ function Player() {
           };
     }, []);
 
+    const msgSubmit = (e) => {
+        e.preventDefault()
+        socket.emit("createMessage", {
+            text: document.querySelector('input[name="message"]').value
+        }, function() {
+    
+        })
+        document.querySelector('input[name="message"]').value = ''
+    }
 
     
     return (
-        <div>
+        <div >
+              <nav className="navbar navbar-dark" style={{"backgroundColor": "#C95B0C"}}>
+            <a className="navbar-brand" href="#">Navbar</a>
+            </nav>
             {(isLobby) ? (
-                <div>
-                    <p>Welcome to the room lobby</p>
-                    <form id="message-form">
+                <div className="h-100 d-flex align-items-center justify-content-center" >
+                    <div className="grid">
+
+                    <div className="row align-items-center  justify-content-center">
+                        <p>Welcome to the room lobby</p>
+                    </div>
+                        <div className="row align-items-center  justify-content-center">
                         <input type = "text" name="message" placeholder="message" />
-                        <button type="submit" id="submit-btn"> Submit</button>
-                    </form>
+                        <button onClick={event => msgSubmit(event)}> Submit </button>
+                        </div>
+                    </div>
+
                 </div>
                 ) 
             :(
-                <Game_Player  socket={socket} endGameCallback={()=>{setisLobby(true)}} />
+                <Game_Player socket={socket} retToLobby={()=>{setisLobby(true)}} />
             )}
 
         </div>
       );
 
 }
-
-
 
 const domContainer = document.querySelector('#root');
 const root = ReactDOM.createRoot(domContainer);

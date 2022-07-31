@@ -1,0 +1,25 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.background {
+    height: 100%;
+    width: 100%;
+    background-color:#f0ab61;
+    position: absolute;
+}
+
+.chat{
+    height: 100%;
+    width: 90%;
+    margin: 10px;
+    padding-left: 30px;
+    background-color:#ffffff;
+    position: absolute;
+    display: flex;
+    border-radius:30px;
+    flex-direction: column;
+    justify-content: space-around;
+    /* align-items:center; */
+}

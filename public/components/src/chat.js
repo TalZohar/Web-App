@@ -19,21 +19,17 @@ function Chat(props) {
     }, [])
 
     return (      
-    <div>
+    <div class='chat'>
 
-        <p>Chat: </p>
+        <h2>Chat: </h2>
         {(messages.length > 0) ?
         messages.map(m => {
-                return <li key={m.key}> {m.from}: {m.text}</li>;
+                return <li key={m.key}> <b>{m.from}</b>: {m.text}</li>;
         })
         :
         <p>no Messages</p>
         }
       </div>);
-
-
-    
-
 
 }
 

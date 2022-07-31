@@ -42,17 +42,9 @@ function Player() {
             window.location.href = '/';
         });
 
-        socket.on('startGame1', function () {
-            console.log("starting game 1");
+        socket.on('startGame', function () {
+            console.log("starting game");
             setisLobby(false);
-        });
-
-        document.querySelector('#submit-btn').addEventListener('click', function (e) {
-            e.preventDefault();
-            socket.emit("createMessage", {
-                text: document.querySelector('input[name="message"]').value
-            }, function () {});
-            document.querySelector('input[name="message"]').value = '';
         });
 
         return function () {
@@ -61,28 +53,55 @@ function Player() {
         };
     }, []);
 
+    var msgSubmit = function msgSubmit(e) {
+        e.preventDefault();
+        socket.emit("createMessage", {
+            text: document.querySelector('input[name="message"]').value
+        }, function () {});
+        document.querySelector('input[name="message"]').value = '';
+    };
+
     return React.createElement(
         'div',
         null,
+        React.createElement(
+            'nav',
+            { className: 'navbar navbar-dark', style: { "backgroundColor": "#C95B0C" } },
+            React.createElement(
+                'a',
+                { className: 'navbar-brand', href: '#' },
+                'Navbar'
+            )
+        ),
         isLobby ? React.createElement(
             'div',
-            null,
+            { className: 'h-100 d-flex align-items-center justify-content-center' },
             React.createElement(
-                'p',
-                null,
-                'Welcome to the room lobby'
-            ),
-            React.createElement(
-                'form',
-                { id: 'message-form' },
-                React.createElement('input', { type: 'text', name: 'message', placeholder: 'message' }),
+                'div',
+                { className: 'grid' },
                 React.createElement(
-                    'button',
-                    { type: 'submit', id: 'submit-btn' },
-                    ' Submit'
+                    'div',
+                    { className: 'row align-items-center  justify-content-center' },
+                    React.createElement(
+                        'p',
+                        null,
+                        'Welcome to the room lobby'
+                    )
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'row align-items-center  justify-content-center' },
+                    React.createElement('input', { type: 'text', name: 'message', placeholder: 'message' }),
+                    React.createElement(
+                        'button',
+                        { onClick: function onClick(event) {
+                                return msgSubmit(event);
+                            } },
+                        ' Submit '
+                    )
                 )
             )
-        ) : React.createElement(Game_Player, { socket: socket, endGameCallback: function endGameCallback() {
+        ) : React.createElement(Game_Player, { socket: socket, retToLobby: function retToLobby() {
                 setisLobby(true);
             } })
     );
