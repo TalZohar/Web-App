@@ -40,10 +40,10 @@ function Display_Winners(props){
 function Voting_Text(props){
     let {question, answerLeft, answerRight} = props
     return (<div>      
-        <p>Question: {question}</p>
+        <h3>Question: {question}</h3>
         <div>
-            <p>Answer 1: {answerLeft}</p>
-            <p>Answer 2: {answerRight}</p>
+            <h4>Answer 1: {answerLeft}</h4>
+            <h4>Answer 2: {answerRight}</h4>
         </div>   
     </div>)
 
@@ -51,12 +51,15 @@ function Voting_Text(props){
 
 function Voting_Meme(props){
     let {question, answerLeft, answerRight} = props
-    return (<div>      
-        <p>Question:</p> <img src = {'data:image/jpeg;base64,' + question}></img>
+    return (<div style={{'min-height': '100vh'}}>      
+        <div><h3>Question: Who Captioned the Meme Better?</h3> </div>
         <div>
-            <p>Answer 1: Top: {answerLeft.upper}, Bottom: {answerLeft.lower}</p>
-            <p>Answer 2:  Top: {answerRight.upper}, Bottom: {answerRight.lower}</p>
-        </div>   
+            <h4>Answer 1: Top: {answerLeft.upper}, Bottom: {answerLeft.lower}</h4>
+            <h4>Answer 2:  Top: {answerRight.upper}, Bottom: {answerRight.lower}</h4>
+        </div> 
+        <div><img src = {'data:image/jpeg;base64,' + question} class="mx-auto d-block img-fluid unlock-icon"></img></div>
+        
+  
     </div>)
 }
 
@@ -88,6 +91,10 @@ function Voting_Host(props) {
             setAnswerRight(answer2)
             setGameType((prev)=>{return type})
         })
+        socket.on('playerDisconnected', function (user){
+            console.log('user disconnected')
+            socket.emit('playerDisconnected_voting')
+        })
         return () => {
             socket.off('vote');
             socket.off('voteOnAnswers');
@@ -117,16 +124,23 @@ function Voting_Host(props) {
     }
     
 
-    return (<div>
+    return (<div class="text-center vsc-initialized container-fluid">
             {(votingAnswers) ? (
-                <div>
-                <Display_Winners userVotes={votingAnswers} user_list={user_list}/>
-                <button onClick={goToLobby}> Return to lobby </button>
+                <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
+                <div class="jumbotron"> 
+                    <h2>Scorings</h2>
+                    <hr></hr>
+                    <Display_Winners userVotes={votingAnswers} user_list={user_list}/>
+                    <button className={"center_button"} style={{"backgroundColor":"white"}} onClick={goToLobby}> Return to lobby </button>
+                </ div>
                 </ div>
             ):(
-            <div>
-                <p>Vote:</p>
+            <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
+                <div class="jumbotron"> 
+                <h2>Vote: who answered better?</h2>
+                <hr></hr>
                 {getVoteHTML()}
+                </div>
             </div>
             )}
         </div>)
@@ -135,7 +149,7 @@ function Voting_Host(props) {
 
 function Game_Host(props) {
     const {socket, goToLobby} = props
-    const [isQuestionPhase, setIsQuestionPhase] = React.useState(null)
+    const [isQuestionPhase, setIsQuestionPhase] = React.useState("loading")
     const [timeState, setTimeState] = React.useState({time_minutes:null, time_seconds:null, id:null})
     const [num_answered, setNum_answered] = React.useState(null)
     const [user_list, setUser_list] = React.useState(null)
@@ -163,6 +177,11 @@ function Game_Host(props) {
             setUser_list((prev)=>{return [...user_list]})
         })
 
+        socket.on('playerDisconnected', function (user){
+            socket.emit('playerDisconnected_'+String(user.id))
+
+        })
+
         return () => {
             socket.off('startCountdown');
             socket.off('answer');
@@ -174,8 +193,14 @@ function Game_Host(props) {
 
     return (
         <div class="text-center vsc-initialized container-fluid">
-            {/* <p>Game</p> */}
-            {(isQuestionPhase) ? (
+            {(isQuestionPhase=="loading") ? (
+                <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
+                <div class="jumbotron"> 
+                    <h2>Loading Questions </h2> 
+                </div>
+                </div>
+            ):(
+            (isQuestionPhase) ? (
                 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
                     <div class="jumbotron"> 
                     <h3>Answer Your Questions</h3>
@@ -192,7 +217,7 @@ function Game_Host(props) {
                 </div>
             ):(
                 <Voting_Host socket={socket} user_list={user_list} goToLobby={goToLobby}/>
-            )}
+            ))}
         </div>
       );
 

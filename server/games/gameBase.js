@@ -8,10 +8,13 @@ class GameBase {
         this.eventEm = new EventEmitter()
         this.gameType = 'text'
         this.numOfAnswers = numOfAnswers
+        this.num_disconnected=0
+        this.disconnected=new Array(this.room.getNumOfUsers())
         this.userAnswers = new Array(this.room.getNumOfUsers())
         this.userVotes = new Array(this.room.getNumOfUsers())
         for (let i = 0; i <this.room.getNumOfUsers(); i++){
             this.userVotes[i]=0
+            this.disconnected[i]=false
             this.userAnswers[i] = new Array(this.numOfAnswers)
             for (let j = 0; j < this.numOfAnswers; j++){
                 this.userAnswers[i][j] = null
@@ -59,13 +62,19 @@ class GameBase {
 
     async getVote(question_users){
         this.io.to(this.room.room_id).emit('voting')
-        let votes_cnt=0
-        while(votes_cnt!=this.room.getNumOfUsers()){
+        let votes_cnt=this.num_disconnected
+        while(votes_cnt<=this.room.getNumOfUsers()){
+            console.log('awaiting',votes_cnt,this.room.getNumOfUsers())
             await new Promise((resolve, reject) => {
                 this.socket.once("hostVote_"+String(this.room.room_id), (user,vote)=>{
                     console.log('recieved vote ',user.name,vote)
                     votes_cnt+=1
                     this.userVotes[question_users[vote]] += 1
+                    resolve()
+                })
+                this.socket.on('playerDisconnected_voting',()=>{
+                    console.log( "disconnected...")
+                    votes_cnt+=1
                     resolve()
                 })
             })
@@ -108,6 +117,10 @@ class GameBase {
                 this.io.to(user.id).emit("question", {data: this.getQuestion(questionNum), type: this.gameType})
                 resolve()
             })
+            if (this.disconnected[user_num]){
+                this.eventEm.emit("userFinished", user)
+                return
+            }
 
             let recievedAnswer = false
             while(!recievedAnswer){
@@ -124,12 +137,16 @@ class GameBase {
                             console.log("you shouldn't be here")
                         }
                     })
+                    this.socket.on('playerDisconnected_'+String(user.id),()=>{
+                        console.log(user.id, "disconnected...")
+                        recievedAnswer = true
+                        this.num_answered[user_num]=-2
+                        resolve()
+                    })
                 })
 
             }
             this.num_answered[user_num]++
-            // console.log(this.num_answered)
-            // console.log(this.userAnswers)
             this.socket.emit("updateUserAnswers", this.num_answered, this.room.getUserList())
         }
         this.io.to(user.id).emit("userFinished")
@@ -169,7 +186,7 @@ class GameBase {
 
     hasEveryoneAnswered() {
         for (let i = 0; i < this.room.getNumOfUsers(); i++){
-            if (this.num_answered[i] != this.numOfAnswers){
+            if ((this.num_answered[i] != this.numOfAnswers)&&(!this.disconnected[i])){
                 return false
             }
         }
@@ -184,6 +201,11 @@ class GameBase {
             userQuestions[i] = []
         }
         let questionNum = 0
+        if ((userCount === 0) ||(userCount === 1)){
+            console.log('Error - not enough players')
+            this.socket.emit('notEnoughPlayers')
+            this.io.to(this.room.room_id).emit('notEnoughPlayers')
+        }
         while (true){
             let validUsers = 0
             let maxIndices = [] // all indices of the users with highest amount of questions left
@@ -211,13 +233,10 @@ class GameBase {
                     validUsers+=1
                 }
             }
-            if (validUsers === 0){
+            if ((validUsers === 0) ||(validUsers === 1)){
                 break
             }
-            if (validUsers === 1){
-                console.log('Error - odd number of questions or unfixed matchup bug')
-                break
-            }
+ 
             // find pair
             let firstMaxIndex = Math.floor(Math.random()*maxIndices.length)
             let first = maxIndices[firstMaxIndex]

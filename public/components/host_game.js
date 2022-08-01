@@ -64,7 +64,7 @@ function Voting_Text(props) {
         'div',
         null,
         React.createElement(
-            'p',
+            'h3',
             null,
             'Question: ',
             question
@@ -73,13 +73,13 @@ function Voting_Text(props) {
             'div',
             null,
             React.createElement(
-                'p',
+                'h4',
                 null,
                 'Answer 1: ',
                 answerLeft
             ),
             React.createElement(
-                'p',
+                'h4',
                 null,
                 'Answer 2: ',
                 answerRight
@@ -95,19 +95,22 @@ function Voting_Meme(props) {
 
     return React.createElement(
         'div',
-        null,
-        React.createElement(
-            'p',
-            null,
-            'Question:'
-        ),
-        ' ',
-        React.createElement('img', { src: 'data:image/jpeg;base64,' + question }),
+        { style: { 'min-height': '100vh' } },
         React.createElement(
             'div',
             null,
             React.createElement(
-                'p',
+                'h3',
+                null,
+                'Question: Who Captioned the Meme Better?'
+            ),
+            ' '
+        ),
+        React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'h4',
                 null,
                 'Answer 1: Top: ',
                 answerLeft.upper,
@@ -115,13 +118,18 @@ function Voting_Meme(props) {
                 answerLeft.lower
             ),
             React.createElement(
-                'p',
+                'h4',
                 null,
                 'Answer 2:  Top: ',
                 answerRight.upper,
                 ', Bottom: ',
                 answerRight.lower
             )
+        ),
+        React.createElement(
+            'div',
+            null,
+            React.createElement('img', { src: 'data:image/jpeg;base64,' + question, 'class': 'mx-auto d-block img-fluid unlock-icon' })
         )
     );
 }
@@ -178,6 +186,10 @@ function Voting_Host(props) {
                 return type;
             });
         });
+        socket.on('playerDisconnected', function (user) {
+            console.log('user disconnected');
+            socket.emit('playerDisconnected_voting');
+        });
         return function () {
             socket.off('vote');
             socket.off('voteOnAnswers');
@@ -205,25 +217,40 @@ function Voting_Host(props) {
 
     return React.createElement(
         'div',
-        null,
+        { 'class': 'text-center vsc-initialized container-fluid' },
         votingAnswers ? React.createElement(
             'div',
-            null,
-            React.createElement(Display_Winners, { userVotes: votingAnswers, user_list: user_list }),
+            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
             React.createElement(
-                'button',
-                { onClick: goToLobby },
-                ' Return to lobby '
+                'div',
+                { 'class': 'jumbotron' },
+                React.createElement(
+                    'h2',
+                    null,
+                    'Scorings'
+                ),
+                React.createElement('hr', null),
+                React.createElement(Display_Winners, { userVotes: votingAnswers, user_list: user_list }),
+                React.createElement(
+                    'button',
+                    { className: "center_button", style: { "backgroundColor": "white" }, onClick: goToLobby },
+                    ' Return to lobby '
+                )
             )
         ) : React.createElement(
             'div',
-            null,
+            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
             React.createElement(
-                'p',
-                null,
-                'Vote:'
-            ),
-            getVoteHTML()
+                'div',
+                { 'class': 'jumbotron' },
+                React.createElement(
+                    'h2',
+                    null,
+                    'Vote: who answered better?'
+                ),
+                React.createElement('hr', null),
+                getVoteHTML()
+            )
         )
     );
 }
@@ -232,7 +259,7 @@ function Game_Host(props) {
     var socket = props.socket,
         goToLobby = props.goToLobby;
 
-    var _React$useState11 = React.useState(null),
+    var _React$useState11 = React.useState("loading"),
         _React$useState12 = _slicedToArray(_React$useState11, 2),
         isQuestionPhase = _React$useState12[0],
         setIsQuestionPhase = _React$useState12[1];
@@ -281,6 +308,10 @@ function Game_Host(props) {
             });
         });
 
+        socket.on('playerDisconnected', function (user) {
+            socket.emit('playerDisconnected_' + String(user.id));
+        });
+
         return function () {
             socket.off('startCountdown');
             socket.off('answer');
@@ -292,7 +323,19 @@ function Game_Host(props) {
     return React.createElement(
         'div',
         { 'class': 'text-center vsc-initialized container-fluid' },
-        isQuestionPhase ? React.createElement(
+        isQuestionPhase == "loading" ? React.createElement(
+            'div',
+            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
+            React.createElement(
+                'div',
+                { 'class': 'jumbotron' },
+                React.createElement(
+                    'h2',
+                    null,
+                    'Loading Questions '
+                )
+            )
+        ) : isQuestionPhase ? React.createElement(
             'div',
             { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
             React.createElement(

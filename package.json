@@ -22,6 +22,7 @@
     "bootstrap": "^5.2.0",
     "create-react-app": "^5.0.1",
     "express": "^4.17.3",
+    "meme-maker": "^2.1.2",
     "react-countdown-circle-timer": "^3.0.9",
     "socket.io": "^4.4.1",
     "tar": "^6.1.11",

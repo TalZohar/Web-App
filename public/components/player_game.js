@@ -23,32 +23,36 @@ function Answers_Text(props) {
     };
     return React.createElement(
         'div',
-        { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
+        { style: { 'min-height': '100vh', 'display': 'flex', 'align-items': 'center' } },
         React.createElement(
             'div',
-            { 'class': 'jumbotron' },
+            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
             React.createElement(
-                'h3',
-                null,
-                'Answer the following question:'
-            ),
-            React.createElement(
-                'p',
-                null,
-                text
-            ),
-            React.createElement('input', {
-                type: 'text',
-                id: 'inputAnswer',
-                onChange: handleChange,
-                value: answer
-            }),
-            React.createElement(
-                'button',
-                { onClick: function onClick(e) {
-                        return onAnswer(e);
-                    } },
-                ' Submit '
+                'div',
+                { 'class': 'jumbotron' },
+                React.createElement(
+                    'h3',
+                    null,
+                    'Answer the following question:'
+                ),
+                React.createElement(
+                    'p',
+                    null,
+                    text
+                ),
+                React.createElement('input', {
+                    type: 'text',
+                    id: 'inputAnswer',
+                    onChange: handleChange,
+                    value: answer
+                }),
+                React.createElement(
+                    'button',
+                    { onClick: function onClick(e) {
+                            return onAnswer(e);
+                        } },
+                    ' Submit '
+                )
             )
         )
     );
@@ -88,40 +92,47 @@ function Answers_Meme(props) {
     console.log(image);
     return React.createElement(
         'div',
-        { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
+        { style: { 'min-height': '100vh', 'display': 'flex', 'align-items': 'center' } },
         React.createElement(
             'div',
-            { 'class': 'jumbotron' },
-            React.createElement(
-                'h3',
-                null,
-                'Caption the meme:'
-            ),
-            React.createElement('input', {
-                type: 'text',
-                id: 'upperAnswer',
-                onChange: handleChangeUpper,
-                value: answerUpper,
-                placeholder: 'Enter upper caption'
-            }),
-            React.createElement('input', {
-                type: 'text',
-                id: 'lowerAnswer',
-                onChange: handleChangeLower,
-                value: answerLower,
-                placeholder: 'Enter lower caption'
-            }),
-            React.createElement(
-                'button',
-                { onClick: function onClick(e) {
-                        return onAnswer(e);
-                    } },
-                ' Submit '
-            ),
+            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
             React.createElement(
                 'div',
-                { 'class': 'col-md-4 px-0' },
-                React.createElement('img', { src: 'data:image/jpeg;base64,' + image, 'class': 'rounded mx-auto d-block', alt: '...' })
+                { 'class': 'jumbotron' },
+                React.createElement(
+                    'h3',
+                    null,
+                    'Caption the meme:'
+                ),
+                React.createElement('input', {
+                    'class': 'input_bar',
+                    type: 'text',
+                    id: 'upperAnswer',
+                    onChange: handleChangeUpper,
+                    value: answerUpper,
+                    placeholder: 'Enter upper caption'
+
+                }),
+                React.createElement('input', {
+                    'class': 'input_bar',
+                    type: 'text',
+                    id: 'lowerAnswer',
+                    onChange: handleChangeLower,
+                    value: answerLower,
+                    placeholder: 'Enter lower caption'
+                }),
+                React.createElement(
+                    'button',
+                    { onClick: function onClick(e) {
+                            return onAnswer(e);
+                        } },
+                    ' Submit '
+                ),
+                React.createElement(
+                    'div',
+                    { 'class': 'col align-self-center' },
+                    React.createElement('img', { src: 'data:image/jpeg;base64,' + image, 'class': 'mx-auto d-block img-fluid unlock-icon' })
+                )
             )
         )
     );
@@ -273,28 +284,32 @@ function Game_Player(props) {
             )
         ) : React.createElement(
             'div',
-            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
+            { style: { 'min-height': '100vh', 'display': 'flex', 'align-items': 'center' } },
             React.createElement(
                 'div',
-                { 'class': 'jumbotron' },
+                { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
                 React.createElement(
-                    'h2',
-                    null,
-                    'Which Answer is better?'
-                ),
-                React.createElement(
-                    'button',
-                    { onClick: function onClick(e) {
-                            return onVote(e, 0);
-                        } },
-                    ' Answer 1 '
-                ),
-                React.createElement(
-                    'button',
-                    { onClick: function onClick(e) {
-                            return onVote(e, 1);
-                        } },
-                    ' Answer 2 '
+                    'div',
+                    { 'class': 'jumbotron' },
+                    React.createElement(
+                        'h2',
+                        null,
+                        'Which Answer is better?'
+                    ),
+                    React.createElement(
+                        'button',
+                        { className: "center_button", style: { "backgroundColor": "white" }, onClick: function onClick(e) {
+                                return onVote(e, 0);
+                            } },
+                        ' Answer 1 '
+                    ),
+                    React.createElement(
+                        'button',
+                        { className: "center_button", style: { "backgroundColor": "white" }, onClick: function onClick(e) {
+                                return onVote(e, 1);
+                            } },
+                        ' Answer 2 '
+                    )
                 )
             )
         )

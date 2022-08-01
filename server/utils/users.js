@@ -4,7 +4,7 @@ class Users {
     }
 
     addUser(id, name, room_id){
-        let user = {id, name, room_id}
+        let user = {'id':id, 'name':name, 'room_id':room_id, 'user_num':(this.users.length)}
         this.users.push(user)
         return user
     }

@@ -13,6 +13,7 @@ function Answers_Text(props){
         setAnswer((prev)=>{return ''})
     }
     return (
+        <div style={{'min-height': '100vh' ,'display': 'flex' ,'align-items': 'center' }}>    
         <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
         <div class="jumbotron">
             <h3>Answer the following question:</h3>
@@ -24,6 +25,7 @@ function Answers_Text(props){
             value = {answer}
             />
             <button onClick={(e)=>onAnswer(e)}> Submit </button>
+        </div>
         </div>
         </div>
     )
@@ -50,18 +52,22 @@ function Answers_Meme(props){
     }
     console.log(image)
     return (
+        <div style={{'min-height': '100vh' ,'display': 'flex' ,'align-items': 'center' }}>    
         <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
             <div class="jumbotron">
 
             <h3>Caption the meme:</h3>
             <input 
+            class='input_bar'
             type="text"
             id="upperAnswer"
             onChange={handleChangeUpper}
             value = {answerUpper}
             placeholder={'Enter upper caption'}
+            
             />
             <input 
+            class='input_bar'
             type="text"
             id="lowerAnswer"
             onChange={handleChangeLower}
@@ -69,13 +75,14 @@ function Answers_Meme(props){
             placeholder={'Enter lower caption'}
             />
             <button onClick={(e)=>onAnswer(e)}> Submit </button>
-            
-            <div class="col-md-4 px-0">
-                <img src = {'data:image/jpeg;base64,'+image} class="rounded mx-auto d-block" alt="..."></img>
+            <div class="col align-self-center">
+            {/* <div class="col-md-4 px-0"> */}
+                <img src = {'data:image/jpeg;base64,'+image} class="mx-auto d-block img-fluid unlock-icon" ></img>
             </div>
             
 
             </div> 
+        </div>
         </div>
     )
 }
@@ -199,13 +206,15 @@ function Game_Player(props) {
                     <h2>Every vote counts! </h2> 
                 </div>
                 ):
-                (              
-                <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
+                (  
+                <div style={{'min-height': '100vh' ,'display': 'flex' ,'align-items': 'center' }}>            
+                <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column " >
                     <div class="jumbotron"> 
                         <h2>Which Answer is better?</h2>
-                        <button onClick={(e)=>onVote(e,0)}> Answer 1 </button>
-                        <button onClick={(e)=>onVote(e,1)}> Answer 2 </button>
+                        <button className={"center_button"} style={{"backgroundColor":"white"}} onClick={(e)=>onVote(e,0)}> Answer 1 </button>
+                        <button className={"center_button"} style={{"backgroundColor":"white"}} onClick={(e)=>onVote(e,1)}> Answer 2 </button>
                     </div>
+                </div>
                 </div>
                 )
             )

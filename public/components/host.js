@@ -45,6 +45,10 @@ function Host() {
         socket.on('updateUsersList', function (users) {
             setUsers(users);
         });
+        socket.on('notEnoughPlayers', function () {
+            setisLobby(true);
+            alert("Not enough players");
+        });
 
         return function () {
             socket.off('connect');

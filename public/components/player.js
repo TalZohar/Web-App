@@ -46,6 +46,10 @@ function Player() {
             console.log("starting game");
             setisLobby(false);
         });
+        socket.on('notEnoughPlayers', function () {
+            setisLobby(true);
+            alert("Not enough players");
+        });
 
         return function () {
             socket.off('connect');
@@ -63,16 +67,16 @@ function Player() {
 
     return React.createElement(
         'div',
-        null,
+        { 'class': 'root' },
         isLobby ? React.createElement(
             'div',
-            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ', style: { "align-items": "center" } },
+            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto', style: { 'display': 'flex', 'align-items': 'center', 'align-self': 'center' } },
             React.createElement(
                 'div',
-                { 'class': 'jumbotron', style: { "backgroundColor": "#FFFFFF", "width": "50%" } },
+                { 'class': 'jumbotron col-lg-6 col-md-6 col-sm-6 col-xs-6 offset-3 float-md-center', style: { "backgroundColor": "#FFFFFF", "width": "70%" } },
                 React.createElement(
                     'div',
-                    { className: 'd-flex row align-items-center  justify-content-center' },
+                    { className: 'd-flex align-items-center justify-content-center text-center' },
                     React.createElement(
                         'h2',
                         null,
@@ -82,7 +86,7 @@ function Player() {
                 React.createElement(
                     'div',
                     { className: 'd-flex row align-items-center  justify-content-center' },
-                    React.createElement('input', { type: 'text', name: 'message', placeholder: 'message' }),
+                    React.createElement('input', { type: 'text', name: 'message', placeholder: 'message', 'class': 'input_bar' }),
                     React.createElement(
                         'button',
                         { onClick: function onClick(event) {

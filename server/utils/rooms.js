@@ -65,6 +65,18 @@ class Room {
         return namesArray
     }
 
+    getClone(newRoom){
+        newRoom.room_id = this.room_id
+        newRoom.host_id = this.host_id
+        newRoom.users = []
+        newRoom.current_game=this.current_game
+        for(let i = 0; i <this.users.length; i++){
+            newRoom.users[i]=this.users[i]
+        }
+        return newRoom
+
+    }
+
 }
 
 

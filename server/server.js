@@ -79,19 +79,21 @@ io.on('connection', (socket) =>{
     socket.on('startingGame', (game_num) => {
         console.log(`starting game ${game_num} for room ${isHost.room_id}`)
         let game=0
+        let room_copy =  isHost.getClone(new Room)
+
         if(game_num==1){
-            game = new Game1(io, socket, isHost, 2)
+            game = new Game1(io, socket, room_copy, 2)
         }
         else if(game_num==2){
-            game = new Game2(io, socket, isHost, 2)
+            game = new Game2(io, socket, room_copy, 2)
         }
         else if(game_num==3){
-            game = new Game3(io, socket, isHost, 2)
+            game = new Game3(io, socket, room_copy, 2)
         }
-         
         let room = rooms.getRoom(isHost.room_id)
+
         io.to(isHost.room_id).emit('startGame')
-        room.current_game= game
+        room.current_game = game
         setTimeout(function(){game.startGame()}, 500);
     })
 
@@ -130,6 +132,13 @@ io.on('connection', (socket) =>{
                     room.removeUser(user.id)
                     io.to(room.host_id).emit('updateUsersList', room.getUserList())
                     io.to(room.host_id).emit('newMessage', generateMessage('Admin', `see ya later ${user.name}, begone from ${user.room_id}`))
+                    if(room.current_game){
+                        console.log(user.id, "...disconnected...")
+                        io.to(room.host_id).emit('playerDisconnected', user)
+                        room.current_game.num_disconnected+=1
+                        room.current_game.disconnected[user.user_num]=true
+                    }
+
                 }
             }
         }
