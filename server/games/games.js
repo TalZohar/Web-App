@@ -42,8 +42,8 @@ class Game2 extends GameBase {
 class Game3 extends GameBase {
     constructor (io, socket, room, numOfAnswers) {
         super(io, socket, room, numOfAnswers)
-        this.Path = path.join(__dirname, 'q1.json')
-        this.questionType='text'
+        this.Path = path.join(__dirname, 'q3.json')
+        this.gameType='drawing'
     }
     getQuestionsLstFromFile(){
         let rawdata = fs.readFileSync(this.Path)

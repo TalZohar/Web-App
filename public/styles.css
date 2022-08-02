@@ -96,3 +96,22 @@ html,body{
     justify-content: center;
     align-items:center;
 }
+
+
+.fixed_button_right{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    border: 3px solid #73AD21;
+}
+.fixed_button_left{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    border: 3px solid #73AD21;
+}
+.dashed-left {
+    border-right: 1px dashed #333;
+  }

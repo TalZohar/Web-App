@@ -1,4 +1,5 @@
 'use strict';
+import Drawing_Board from "./drawing.js";
 
 function Answers_Text(props){
     const {text, answerCallback} = props
@@ -90,6 +91,22 @@ function Answers_Meme(props){
 function Answers_Drawing(props){
     const {text, answerCallback} = props
     
+
+    const submitCallback = (canvas) =>{
+        answerCallback(canvas)
+    }
+    return (       <div style={{'display': 'flex' ,'align-items': 'center' }}>    
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
+        <div class="jumbotron">
+        <h3> Draw the Following :{text}</h3>
+        </div>
+        </div>
+        
+        <Drawing_Board submitCallback={submitCallback} />
+
+        </div>)
+
+    
 }
 
 function Answers_Player(props){
@@ -120,7 +137,7 @@ function Answers_Player(props){
     }, [])
 
     const onAnswer = (data) => {
-        return socket.emit('answer', {'data': data})
+        socket.emit('answer', {'data': data})
     }
 
     const getQuestionHTML = () =>{

@@ -70,7 +70,7 @@ function Host() {
             React.createElement(
                 "a",
                 { className: "navbar-brand", href: "#" },
-                "web-app"
+                "Quizapp"
             )
         ),
         isLobby ? React.createElement(Lobby, { socket: socket, room_id: roomId, users: users, startGameCallback: function startGameCallback(gameNum) {
