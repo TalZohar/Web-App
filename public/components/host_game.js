@@ -3,6 +3,8 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 import Timer from "./timer.js";
+import Meme_Generator from "./meme_generator.js";
+// import generateMemeCanvas from "./meme_generator.js";
 'use strict';
 
 function Player_Progress(props) {
@@ -16,11 +18,11 @@ function Player_Progress(props) {
 
     return user_list.map(function (e, i) {
         return React.createElement(
-            'li',
+            "li",
             { key: i },
-            ' ',
+            " ",
             e,
-            ': ',
+            ": ",
             num_answered[i]
         );
     });
@@ -45,11 +47,11 @@ function Display_Winners(props) {
 
     return c.map(function (e, i) {
         return React.createElement(
-            'li',
+            "li",
             { key: i },
-            ' ',
+            " ",
             e[0],
-            ' : ',
+            " : ",
             e[1]
         );
     });
@@ -61,27 +63,27 @@ function Voting_Text(props) {
         answerRight = props.answerRight;
 
     return React.createElement(
-        'div',
+        "div",
         null,
         React.createElement(
-            'h3',
+            "h3",
             null,
-            'Question: ',
+            "Question: ",
             question
         ),
         React.createElement(
-            'div',
+            "div",
             null,
             React.createElement(
-                'h4',
+                "h4",
                 null,
-                'Answer 1: ',
+                "Answer 1: ",
                 answerLeft
             ),
             React.createElement(
-                'h4',
+                "h4",
                 null,
-                'Answer 2: ',
+                "Answer 2: ",
                 answerRight
             )
         )
@@ -89,47 +91,82 @@ function Voting_Text(props) {
 }
 
 function Voting_Meme(props) {
+    var memeMaker = function memeMaker(img, upper, lower) {
+        var url = 'data:image/jpeg;base64,' + img;
+        return React.createElement(Meme_Generator, { img_url: url, topText: upper, bottomText: lower });
+    };
+
     var question = props.question,
         answerLeft = props.answerLeft,
         answerRight = props.answerRight;
 
     return React.createElement(
-        'div',
-        { style: { 'min-height': '100vh' } },
+        "div",
+        null,
         React.createElement(
-            'div',
-            null,
+            "div",
+            { "class": "row" },
             React.createElement(
-                'h3',
-                null,
-                'Question: Who Captioned the Meme Better?'
-            ),
-            ' '
-        ),
-        React.createElement(
-            'div',
-            null,
-            React.createElement(
-                'h4',
-                null,
-                'Answer 1: Top: ',
-                answerLeft.upper,
-                ', Bottom: ',
-                answerLeft.lower
+                "div",
+                { "class": "col-md-6", style: { "padding-right": "20px", "border-right": "1px solid #ccc" } },
+                memeMaker(question, answerLeft.upper, answerLeft.lower)
             ),
             React.createElement(
-                'h4',
-                null,
-                'Answer 2:  Top: ',
-                answerRight.upper,
-                ', Bottom: ',
-                answerRight.lower
+                "div",
+                { "class": "col-md-6" },
+                memeMaker(question, answerRight.upper, answerRight.lower)
             )
+        )
+    );
+}
+
+function Voting_Drawing(props) {
+    var question = props.question,
+        answerLeft = props.answerLeft,
+        answerRight = props.answerRight;
+
+    console.log(answerLeft);
+
+    React.useEffect(function () {
+        // const canvasLeft = canvasLeftRef.current
+        // const canvasRight = canvasRightRef.current
+
+        // const contextLeft = canvasLeft.getContext("2d")
+        // const contextRight = canvasRight.getContext("2d")
+
+        //contextLeft.drawImage(answerLeft, 0, 0)
+        // contextRight.drawImage(answerRight, 0, 0)
+    }, []);
+
+    return React.createElement(
+        "div",
+        null,
+        React.createElement(
+            "h3",
+            null,
+            question
         ),
         React.createElement(
-            'div',
-            null,
-            React.createElement('img', { src: 'data:image/jpeg;base64,' + question, 'class': 'mx-auto d-block img-fluid unlock-icon' })
+            "div",
+            { "class": "row" },
+            React.createElement(
+                "div",
+                { "class": "col-md-6", style: { "padding-right": "20px", "border-right": "1px solid #ccc" } },
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement("img", { src: answerLeft, "class": "mx-auto d-block img-fluid unlock-icon" })
+                )
+            ),
+            React.createElement(
+                "div",
+                { "class": "col-md-6" },
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement("img", { src: answerRight, "class": "mx-auto d-block img-fluid unlock-icon" })
+                )
+            )
         )
     );
 }
@@ -208,47 +245,47 @@ function Voting_Host(props) {
         } else {
             console.log(gameType);
             return React.createElement(
-                'p',
+                "p",
                 null,
-                'No answers to vote on received'
+                "No answers to vote on received"
             );
         }
     };
 
     return React.createElement(
-        'div',
-        { 'class': 'text-center vsc-initialized container-fluid' },
+        "div",
+        { "class": "text-center vsc-initialized container-fluid" },
         votingAnswers ? React.createElement(
-            'div',
-            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
+            "div",
+            { "class": "cover-container d-flex w-100 h-100 p-3 mx-auto flex-column " },
             React.createElement(
-                'div',
-                { 'class': 'jumbotron' },
+                "div",
+                { "class": "jumbotron" },
                 React.createElement(
-                    'h2',
+                    "h2",
                     null,
-                    'Scorings'
+                    "Scorings"
                 ),
-                React.createElement('hr', null),
+                React.createElement("hr", null),
                 React.createElement(Display_Winners, { userVotes: votingAnswers, user_list: user_list }),
                 React.createElement(
-                    'button',
+                    "button",
                     { className: "center_button", style: { "backgroundColor": "white" }, onClick: goToLobby },
-                    ' Return to lobby '
+                    " Return to lobby "
                 )
             )
         ) : React.createElement(
-            'div',
-            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
+            "div",
+            { "class": "cover-container d-flex w-100 h-100 p-3 mx-auto flex-column " },
             React.createElement(
-                'div',
-                { 'class': 'jumbotron' },
+                "div",
+                { "class": "jumbotron" },
                 React.createElement(
-                    'h2',
+                    "h2",
                     null,
-                    'Vote: who answered better?'
+                    "Pick your favorite"
                 ),
-                React.createElement('hr', null),
+                React.createElement("hr", null),
                 getVoteHTML()
             )
         )
@@ -321,44 +358,44 @@ function Game_Host(props) {
     }, []);
 
     return React.createElement(
-        'div',
-        { 'class': 'text-center vsc-initialized container-fluid' },
+        "div",
+        { "class": "text-center vsc-initialized container-fluid" },
         isQuestionPhase == "loading" ? React.createElement(
-            'div',
-            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
+            "div",
+            { "class": "cover-container d-flex w-100 h-100 p-3 mx-auto flex-column " },
             React.createElement(
-                'div',
-                { 'class': 'jumbotron' },
+                "div",
+                { "class": "jumbotron" },
                 React.createElement(
-                    'h2',
+                    "h2",
                     null,
-                    'Loading Questions '
+                    "Loading Questions "
                 )
             )
         ) : isQuestionPhase ? React.createElement(
-            'div',
-            { 'class': 'cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ' },
+            "div",
+            { "class": "cover-container d-flex w-100 h-100 p-3 mx-auto flex-column " },
             React.createElement(
-                'div',
-                { 'class': 'jumbotron' },
+                "div",
+                { "class": "jumbotron" },
                 React.createElement(
-                    'h3',
+                    "h3",
                     null,
-                    'Answer Your Questions'
+                    "Answer Your Questions"
                 ),
-                React.createElement('hr', null),
+                React.createElement("hr", null),
                 React.createElement(
-                    'p',
+                    "p",
                     null,
-                    'Time Left:'
+                    "Time Left:"
                 ),
                 React.createElement(Timer, { initialMinute: timeState.time_minutes, initialSeconds: timeState.time_seconds, endCallback: function endCallback() {
                         socket.emit("endCountdown", timeState.id);
                     } })
             ),
             React.createElement(
-                'div',
-                { 'class': 'text-left jumbotron', style: { opacity: 0.9, padding: "0.1%" } },
+                "div",
+                { "class": "text-left jumbotron", style: { opacity: 0.9, padding: "0.1%" } },
                 React.createElement(Player_Progress, { num_answered: num_answered, user_list: user_list })
             )
         ) : React.createElement(Voting_Host, { socket: socket, user_list: user_list, goToLobby: goToLobby })

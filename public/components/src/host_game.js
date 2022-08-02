@@ -1,4 +1,6 @@
 import Timer from "./timer.js";
+import Meme_Generator from "./meme_generator.js";
+// import generateMemeCanvas from "./meme_generator.js";
 'use strict';
 
 function Player_Progress(props) {
@@ -50,19 +52,56 @@ function Voting_Text(props){
 }
 
 function Voting_Meme(props){
+    const memeMaker=(img,upper,lower)=>{
+        let url = 'data:image/jpeg;base64,' + img
+        return <Meme_Generator img_url={url} topText = {upper} bottomText = {lower} />
+    }
+
     let {question, answerLeft, answerRight} = props
-    return (<div style={{'min-height': '100vh'}}>      
-        <div><h3>Question: Who Captioned the Meme Better?</h3> </div>
-        <div>
-            <h4>Answer 1: Top: {answerLeft.upper}, Bottom: {answerLeft.lower}</h4>
-            <h4>Answer 2:  Top: {answerRight.upper}, Bottom: {answerRight.lower}</h4>
+    return (<div>      
+        <div class = "row">
+            <div class="col-md-6" style={{"padding-right":"20px","border-right": "1px solid #ccc"}}>
+            {memeMaker(question, answerLeft.upper, answerLeft.lower)}
+            </div>
+            <div class="col-md-6">
+            {memeMaker(question, answerRight.upper, answerRight.lower)}
+            </div>
         </div> 
-        <div><img src = {'data:image/jpeg;base64,' + question} class="mx-auto d-block img-fluid unlock-icon"></img></div>
+        
+        {/* <div><img src = {'data:image/jpeg;base64,' + question} class="mx-auto d-block img-fluid unlock-icon"></img></div> */}
         
   
     </div>)
 }
 
+function Voting_Drawing(props){
+    let {question, answerLeft, answerRight} = props
+    console.log(answerLeft)
+        
+    React.useEffect(()=>{
+        // const canvasLeft = canvasLeftRef.current
+        // const canvasRight = canvasRightRef.current
+
+        // const contextLeft = canvasLeft.getContext("2d")
+        // const contextRight = canvasRight.getContext("2d")
+
+        //contextLeft.drawImage(answerLeft, 0, 0)
+       // contextRight.drawImage(answerRight, 0, 0)
+    }, [])
+
+    return (<div>      
+        <h3>{question}</h3>
+        <div class = "row">
+        <div class="col-md-6" style={{"padding-right":"20px","border-right": "1px solid #ccc"}}>
+        <div><img src = {answerLeft} class="mx-auto d-block img-fluid unlock-icon" ></img></div>
+        </div>
+        <div class="col-md-6">
+        <div><img src = {answerRight} class="mx-auto d-block img-fluid unlock-icon"></img></div>
+        </div>
+        </div>
+  
+    </div>)
+}
 
 function Voting_Host(props) {
     const {socket, user_list, goToLobby} = props
@@ -137,7 +176,7 @@ function Voting_Host(props) {
             ):(
             <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
                 <div class="jumbotron"> 
-                <h2>Vote: who answered better?</h2>
+                <h2>Pick your favorite</h2>
                 <hr></hr>
                 {getVoteHTML()}
                 </div>
