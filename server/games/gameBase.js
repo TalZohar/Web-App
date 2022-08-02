@@ -63,22 +63,28 @@ class GameBase {
     async getVote(question_users){
         this.io.to(this.room.room_id).emit('voting')
         let votes_cnt=this.num_disconnected
-        while(votes_cnt<=this.room.getNumOfUsers()){
-            console.log('awaiting',votes_cnt,this.room.getNumOfUsers())
+        let userVotes_copy=this.userVotes
+        let dis=false
+        while(votes_cnt<this.room.getNumOfUsers()){
             await new Promise((resolve, reject) => {
-                this.socket.once("hostVote_"+String(this.room.room_id), (user,vote)=>{
+                this.socket.once(("hostVote_"+String(this.room.room_id)), function(user,vote){
                     console.log('recieved vote ',user.name,vote)
                     votes_cnt+=1
-                    this.userVotes[question_users[vote]] += 1
+                    userVotes_copy[question_users[vote]] += 1
                     resolve()
                 })
                 this.socket.on('playerDisconnected_voting',()=>{
                     console.log( "disconnected...")
                     votes_cnt+=1
+                    dis=true
                     resolve()
                 })
-            })
+                if(dis){
+                    this.socket.off(("hostVote_"+String(this.room.room_id)))
+                }
+            }) 
         }
+        this.userVotes = userVotes_copy
     }
 
     async questionPhase(){

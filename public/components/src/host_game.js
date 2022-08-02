@@ -76,7 +76,7 @@ function Voting_Host(props) {
     React.useEffect(() => {
         socket.on('vote', function(user, vote) {    
             console.log(user.name, vote)
-            socket.emit('hostVote_'+String(user.room_id), user, vote)
+            socket.emit(('hostVote_'+String(user.room_id)), user, vote)
         })
 
         socket.on('endGame', function(userVotes) {    

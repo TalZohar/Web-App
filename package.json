@@ -20,9 +20,12 @@
   "dependencies": {
     "babel-preset-react-app": "^3.1.2",
     "bootstrap": "^5.2.0",
+    "cairo": "^0.1.0-alpha.3",
+    "canvas": "^2.9.3",
     "create-react-app": "^5.0.1",
     "express": "^4.17.3",
     "meme-maker": "^2.1.2",
+    "pango": "^0.0.3",
     "react-countdown-circle-timer": "^3.0.9",
     "socket.io": "^4.4.1",
     "tar": "^6.1.11",
