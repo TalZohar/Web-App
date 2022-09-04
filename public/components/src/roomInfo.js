@@ -14,7 +14,7 @@ function getUsersHTML(users){
 }
 
 
-function RoomInfo(props) {
+function RoomInfo(props) { //get room info for display
     const {roomId, users} = props
     let usersAndId = []
     if (users){

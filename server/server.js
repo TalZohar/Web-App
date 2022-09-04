@@ -25,15 +25,15 @@ const publicPath = path.join(__dirname, '/../public/');
 app.use(express.static(publicPath));
 // app.use(express.static(path.join(__dirname, '/games/')));
 
-io.on('connection', (socket) =>{
+io.on('connection', (socket) =>{ //player trying to connect
     let isHost = false
     console.log("A new user just connected")
 
-    socket.on('getAvailable', (callback)=> {
+    socket.on('getAvailable', (callback)=> { //returns available rooms to join
         callback(rooms.getRoomList())
     } )
 
-    socket.on('createLobby', (params, callback) => {
+    socket.on('createLobby', (params, callback) => {//host creating lobby
         if (!isValidRoom(params.room_id, rooms)){
             return callback('non valid room id')
         }
@@ -44,7 +44,7 @@ io.on('connection', (socket) =>{
         callback()
     })
 
-    socket.on('join', (params, callback) =>{
+    socket.on('join', (params, callback) =>{ //player joining lobby
         if(!isRealString(params.name)){
             return callback('Invalid name')
         }
@@ -65,7 +65,7 @@ io.on('connection', (socket) =>{
         callback()
     })
     
-    socket.on('createMessage', (message, callback) => {
+    socket.on('createMessage', (message, callback) => { //lobby message system
         let user = users.getUser(socket.id)
 
         if(user && isRealString(message.text)){
@@ -76,12 +76,12 @@ io.on('connection', (socket) =>{
 
     })
 
-    socket.on('startingGame', (game_num) => {
+    socket.on('startingGame', (game_num) => { //host decided to start game
         console.log(`starting game ${game_num} for room ${isHost.room_id}`)
         let game=0
         let room_copy =  isHost.getClone(new Room)
 
-        if(game_num==1){
+        if(game_num==1){ //creat game object
             game = new Game1(io, socket, room_copy, 2)
         }
         else if(game_num==2){
@@ -94,29 +94,29 @@ io.on('connection', (socket) =>{
 
         io.to(isHost.room_id).emit('startGame')
         room.current_game = game
-        setTimeout(function(){game.startGame()}, 500);
+        setTimeout(function(){game.startGame()}, 500); //start game
     })
 
-    socket.on("answer", (answer)=>{
+    socket.on("answer", (answer)=>{ //recieving answer from player, and sending it to the host
         let user = users.getUser(socket.id)
         let room = rooms.getRoom(user.room_id)
         // console.log("recieved answer " + user.name + " " + answer.data)
         io.to(room.host_id).emit('answer', user, answer)
     })
 
-    socket.on("returnToLobby", ()=>{
+    socket.on("returnToLobby", ()=>{ //end of game logic
         io.to(isHost.room_id).emit('returnToLobby')
     })
 
 
 
-    socket.on("vote", (vote)=>{
+    socket.on("vote", (vote)=>{ //recieving vote from player and directing it to the host
         let user = users.getUser(socket.id)
         let room = rooms.getRoom(user.room_id)
         io.to(room.host_id).emit('vote', user, vote)
     })
     
-    socket.on('disconnect', ()=>{
+    socket.on('disconnect', ()=>{ //player disconnection/host logic
         if (isHost){
             let room = rooms.removeRoom(isHost.room_id)
             io.to(room.room_id).emit("abrupt-disconnect")
@@ -134,7 +134,7 @@ io.on('connection', (socket) =>{
                     io.to(room.host_id).emit('newMessage', generateMessage('Admin', `see ya later ${user.name}, begone from ${user.room_id}`))
                     if(room.current_game){
                         console.log(user.id, "...disconnected...")
-                        io.to(room.host_id).emit('playerDisconnected', user)
+                        io.to(room.host_id).emit('playerDisconnected', user) //let host know player disconnented
                         room.current_game.num_disconnected+=1
                         room.current_game.disconnected[user.user_num]=true
                     }

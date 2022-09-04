@@ -1,19 +1,19 @@
-class Rooms {
+class Rooms { //rooms object that contains all the rooms in exsistence
     constructor () {
         this.rooms = []
     }
 
-    addRoom(room_id, host_id){
+    addRoom(room_id, host_id){ //add room
         let room = new Room(room_id, host_id)
         this.rooms.push(room)
         return room
     }
 
-    getRoom(room_id){
+    getRoom(room_id){ // get room by id
         return this.rooms.filter((room) => room.room_id === room_id)[0]
     }
 
-    removeRoom(room_id) {
+    removeRoom(room_id) { //remove room
         let room = this.getRoom(room_id)
 
         if(room){
@@ -21,13 +21,13 @@ class Rooms {
         }
         return room 
     }
-    getRoomList () {
+    getRoomList () { //get lst of all rooms (room objs)
         let roomArray = this.rooms.map((room) => room.room_id)
         return roomArray
     }
 }
 
-class Room {
+class Room { //single room obj
     constructor(room_id, host_id) {
         this.room_id = room_id
         this.host_id = host_id
@@ -35,11 +35,11 @@ class Room {
         this.current_game=null
     }
 
-    getUser(id) {
+    getUser(id) { //get user (in room) by id
         return this.users.filter((user) => user.id === id)[0]
     }
     
-    removeUser(id) {
+    removeUser(id) {//remove user from room
         let user = this.getUser(id)
         if(user){
             this.users = this.users.filter((user) => user.id !== id)
@@ -48,7 +48,7 @@ class Room {
         return user 
     }
 
-    addUser(id, name) {
+    addUser(id, name) {// add user to room
         let room_id = this.room_id
         let score = 0
         let user = {id, name, room_id, score}
@@ -60,12 +60,12 @@ class Room {
         return this.users.length
     }
 
-    getUserList() {
+    getUserList() { //get all users in room
         let namesArray = this.users.map((user) => user.name)
         return namesArray
     }
 
-    getClone(newRoom){
+    getClone(newRoom){ //get clone object of the room
         newRoom.room_id = this.room_id
         newRoom.host_id = this.host_id
         newRoom.users = []

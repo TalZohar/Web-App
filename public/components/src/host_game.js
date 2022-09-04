@@ -2,8 +2,9 @@ import Timer from "./timer.js";
 import Meme_Generator from "./meme_generator.js";
 // import generateMemeCanvas from "./meme_generator.js";
 'use strict';
+//logic for host while game
 
-function Player_Progress(props) {
+function Player_Progress(props) { //display player answer prograss
     const {num_answered, user_list} = props
 
     if (!user_list){
@@ -17,7 +18,7 @@ function Player_Progress(props) {
     )
 }
 
-function Display_Winners(props){
+function Display_Winners(props){ //display winners at end of game
     const {userVotes, user_list} = props
 
     if (!user_list){
@@ -39,7 +40,7 @@ function Display_Winners(props){
         )
 }
 
-function Voting_Text(props){
+function Voting_Text(props){ //voting g1
     let {question, answerLeft, answerRight} = props
     return (<div>      
         <h3>Question: {question}</h3>
@@ -51,13 +52,14 @@ function Voting_Text(props){
 
 }
 
-function Voting_Meme(props){
+function Voting_Meme(props){ //voting g2 (display voting)
     const memeMaker=(img,upper,lower)=>{
         let url = 'data:image/jpeg;base64,' + img
         return <Meme_Generator img_url={url} topText = {upper} bottomText = {lower} />
     }
 
     let {question, answerLeft, answerRight} = props
+    console.log(question)
     return (<div>      
         <div class = "row">
             <div class="col-md-6" style={{"padding-right":"20px","border-right": "1px solid #ccc"}}>
@@ -67,14 +69,15 @@ function Voting_Meme(props){
             {memeMaker(question, answerRight.upper, answerRight.lower)}
             </div>
         </div> 
+
         
-        {/* <div><img src = {'data:image/jpeg;base64,' + question} class="mx-auto d-block img-fluid unlock-icon"></img></div> */}
+        
         
   
     </div>)
 }
 
-function Voting_Drawing(props){
+function Voting_Drawing(props){ //votig g3 (display drawing)
     let {question, answerLeft, answerRight} = props
     console.log(answerLeft)
         
@@ -103,7 +106,7 @@ function Voting_Drawing(props){
     </div>)
 }
 
-function Voting_Host(props) {
+function Voting_Host(props) { //voting logic
     const {socket, user_list, goToLobby} = props
     const [currentQuestion, setCurrentQuestion] = React.useState(null)
     const [answerLeft, setAnswerLeft] = React.useState(null)
@@ -137,6 +140,7 @@ function Voting_Host(props) {
         return () => {
             socket.off('vote');
             socket.off('voteOnAnswers');
+            socket.off('playerDisconnected');
           };
     
     }, []);
@@ -153,18 +157,18 @@ function Voting_Host(props) {
                 return <Voting_Drawing question = {currentQuestion} answerLeft={answerLeft} answerRight={answerRight}></Voting_Drawing>
             }
             else{
-                
+                console.log('hsdhdhshs')
             }
         }
         else{
             console.log(gameType)
-            return <p>No answers to vote on received</p>
+            return <p>Loading Answers...</p>
         }
     }
     
 
     return (<div class="text-center vsc-initialized container-fluid">
-            {(votingAnswers) ? (
+            {(votingAnswers) ? ( //vote finished or not
                 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
                 <div class="jumbotron"> 
                     <h2>Scorings</h2>
@@ -186,7 +190,7 @@ function Voting_Host(props) {
 }
 
 
-function Game_Host(props) {
+function Game_Host(props) { //game logic
     const {socket, goToLobby} = props
     const [isQuestionPhase, setIsQuestionPhase] = React.useState("loading")
     const [timeState, setTimeState] = React.useState({time_minutes:null, time_seconds:null, id:null})
@@ -200,7 +204,7 @@ function Game_Host(props) {
             setIsQuestionPhase(false)
         })
         
-        socket.on('startCountdown', function (time, id=null) {
+        socket.on('startCountdown', function (time, id=null) { //countdown
             console.log(time)
             setIsQuestionPhase(true)
             setTimeState({time_minutes: time.minutes, time_seconds: time.seconds, id:id})
@@ -226,20 +230,21 @@ function Game_Host(props) {
             socket.off('answer');
             socket.off('vote');
             socket.off('updateUserAnswers');
+            socket.off('playerDisconnected');
           };
         
     }, []);
 
     return (
         <div class="text-center vsc-initialized container-fluid">
-            {(isQuestionPhase=="loading") ? (
+            {(isQuestionPhase=="loading") ? ( //voting phase
                 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
                 <div class="jumbotron"> 
                     <h2>Loading Questions </h2> 
                 </div>
                 </div>
             ):(
-            (isQuestionPhase) ? (
+            (isQuestionPhase) ? ( //question phase
                 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
                     <div class="jumbotron"> 
                     <h3>Answer Your Questions</h3>

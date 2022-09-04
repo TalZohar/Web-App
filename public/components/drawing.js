@@ -3,6 +3,7 @@
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 function Drawing_Board(props) {
+    //drawing logic
     var submitCallback = props.submitCallback;
 
     var canvasRef = React.useRef(null);
@@ -36,12 +37,12 @@ function Drawing_Board(props) {
         contextRef.current.beginPath();
         contextRef.current.moveTo(offsetX, offsetY);
         setIsDrawing(true);
-    };
+    }; //start drawing (mouse drawing)
 
     var finishDrawing = function finishDrawing() {
         contextRef.current.closePath();
         setIsDrawing(false);
-    };
+    }; //finish drawing (mouse up)
 
     var draw = function draw(_ref2) {
         var nativeEvent = _ref2.nativeEvent;
@@ -54,14 +55,14 @@ function Drawing_Board(props) {
 
         contextRef.current.lineTo(offsetX, offsetY);
         contextRef.current.stroke();
-    };
+    }; //get pos and draw
 
     var clear = function clear() {
         var canvas = canvasRef.current;
         var context = canvas.getContext("2d");
         context.clearRect(0, 0, canvas.width, canvas.height);
         contextRef.current = context;
-    };
+    }; //clear button
 
     var onSubmit = function onSubmit(e) {
         var canvas = canvasRef.current;

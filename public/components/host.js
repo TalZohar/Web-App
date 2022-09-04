@@ -8,6 +8,8 @@ import Game_Host from "./host_game.js";
 
 var socket = io();
 
+// host component is responsible for all player host. 
+
 function Host() {
     var _React$useState = React.useState(null),
         _React$useState2 = _slicedToArray(_React$useState, 2),
@@ -25,7 +27,7 @@ function Host() {
         setisLobby = _React$useState6[1];
 
     React.useEffect(function () {
-
+        // when connecting, get room info from url request
         socket.on('connect', function () {
             var searchQuery = window.location.search.substring(1);
             var params = JSON.parse('{"' + decodeURI(searchQuery).replace(/&/g, '","').replace(/\+/g, ' ').replace(/=/g, '":"') + '"}');
@@ -45,10 +47,14 @@ function Host() {
         socket.on('updateUsersList', function (users) {
             setUsers(users);
         });
+        // game doesn't start if server dedcided not enouph player
+
         socket.on('notEnoughPlayers', function () {
             setisLobby(true);
             alert("Not enough players");
         });
+
+        // to avoid dup
 
         return function () {
             socket.off('connect');
@@ -61,6 +67,7 @@ function Host() {
         socket.emit('returnToLobby');
     };
 
+    // call fro lobby or game_host component respective to inner state
     return React.createElement(
         "div",
         null,

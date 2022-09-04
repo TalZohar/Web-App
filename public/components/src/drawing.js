@@ -1,6 +1,6 @@
 'use strict';
 
-function Drawing_Board(props){
+function Drawing_Board(props){ //drawing logic
     const {submitCallback} = props
     const canvasRef = React.useRef(null) 
     const contextRef = React.useRef(null)
@@ -26,12 +26,12 @@ function Drawing_Board(props){
         contextRef.current.beginPath()
         contextRef.current.moveTo(offsetX, offsetY)
         setIsDrawing(true)
-    }
+    } //start drawing (mouse drawing)
 
     const finishDrawing = () => {
         contextRef.current.closePath()
         setIsDrawing(false)
-    }
+    } //finish drawing (mouse up)
 
     const draw = ({nativeEvent}) => {
         if (!isDrawing){
@@ -41,14 +41,14 @@ function Drawing_Board(props){
         contextRef.current.lineTo(offsetX, offsetY)
         contextRef.current.stroke()
 
-    }
+    } //get pos and draw
 
     const clear = () =>{
         const canvas = canvasRef.current
         const context = canvas.getContext("2d")
         context.clearRect(0, 0, canvas.width, canvas.height);
         contextRef.current = context
-    }
+    } //clear button
 
     const onSubmit = (e) => {
         const canvas = canvasRef.current

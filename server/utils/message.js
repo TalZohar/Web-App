@@ -1,4 +1,4 @@
-let generateMessage = (from, text) => {
+let generateMessage = (from, text) => { //generating message wrapper code
     return {
         from, 
         text, 

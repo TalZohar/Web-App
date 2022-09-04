@@ -3,8 +3,9 @@
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 import Drawing_Board from "./drawing.js";
-
+//yser in game logic
 function Answers_Text(props) {
+    //answer textbox for user.
     var text = props.text,
         answerCallback = props.answerCallback;
 
@@ -61,6 +62,7 @@ function Answers_Text(props) {
 }
 
 function Answers_Meme(props) {
+    //display meme, upper and lower caption textboxes
     var image = props.image,
         answerCallback = props.answerCallback;
 
@@ -81,6 +83,7 @@ function Answers_Meme(props) {
         setAnswerUpper(event.target.value);
     };
     var onAnswer = function onAnswer(e) {
+        console.log('fmdjdj');
         console.log(image);
         e.preventDefault();
         answerCallback({ upper: answerUpper, lower: answerLower });
@@ -141,6 +144,7 @@ function Answers_Meme(props) {
 }
 
 function Answers_Drawing(props) {
+    //display question. user drawing logic
     var text = props.text,
         answerCallback = props.answerCallback;
 
@@ -170,6 +174,7 @@ function Answers_Drawing(props) {
 }
 
 function Answers_Player(props) {
+    //player answer display logic
     var socket = props.socket;
 
     var _React$useState7 = React.useState(false),
@@ -182,10 +187,16 @@ function Answers_Player(props) {
         activeQuestion = _React$useState10[0],
         setActiveQuestion = _React$useState10[1];
 
+    var _React$useState11 = React.useState(true),
+        _React$useState12 = _slicedToArray(_React$useState11, 2),
+        waiting = _React$useState12[0],
+        setWaiting = _React$useState12[1];
+
     React.useEffect(function () {
         socket.on('question', function (data) {
             setActiveQuestion(data);
             console.log(data);
+            setWaiting(false);
         });
 
         socket.on('timeEnd', function () {
@@ -205,6 +216,7 @@ function Answers_Player(props) {
 
     var onAnswer = function onAnswer(data) {
         socket.emit('answer', { 'data': data });
+        setWaiting(true);
     };
 
     var getQuestionHTML = function getQuestionHTML() {
@@ -222,7 +234,7 @@ function Answers_Player(props) {
             return React.createElement(
                 'p',
                 null,
-                'No Questions received'
+                'Loading Questions...'
             );
         }
     };
@@ -242,29 +254,39 @@ function Answers_Player(props) {
         ) : React.createElement(
             'div',
             null,
-            getQuestionHTML()
+            waiting ? React.createElement(
+                'div',
+                { 'class': 'alert alert-info' },
+                React.createElement(
+                    'h2',
+                    null,
+                    'Waiting For the Next Question...'
+                ),
+                ' '
+            ) : getQuestionHTML()
         )
     );
 }
 
 function Game_Player(props) {
+    //full game (quesion+voting) logic
     var socket = props.socket,
         retToLobby = props.retToLobby;
 
-    var _React$useState11 = React.useState(true),
-        _React$useState12 = _slicedToArray(_React$useState11, 2),
-        isQuestionPhase = _React$useState12[0],
-        setIsQuestionPhase = _React$useState12[1];
-
-    var _React$useState13 = React.useState(false),
+    var _React$useState13 = React.useState(true),
         _React$useState14 = _slicedToArray(_React$useState13, 2),
-        recievedVote = _React$useState14[0],
-        setRecievedVote = _React$useState14[1];
+        isQuestionPhase = _React$useState14[0],
+        setIsQuestionPhase = _React$useState14[1];
 
     var _React$useState15 = React.useState(false),
         _React$useState16 = _slicedToArray(_React$useState15, 2),
-        gameEnded = _React$useState16[0],
-        setGameEnded = _React$useState16[1];
+        recievedVote = _React$useState16[0],
+        setRecievedVote = _React$useState16[1];
+
+    var _React$useState17 = React.useState(false),
+        _React$useState18 = _slicedToArray(_React$useState17, 2),
+        gameEnded = _React$useState18[0],
+        setGameEnded = _React$useState18[1];
 
     React.useEffect(function () {
         socket.on('endGame', function () {

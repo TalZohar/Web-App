@@ -6,8 +6,10 @@ import Timer from "./timer.js";
 import Meme_Generator from "./meme_generator.js";
 // import generateMemeCanvas from "./meme_generator.js";
 'use strict';
+//logic for host while game
 
 function Player_Progress(props) {
+    //display player answer prograss
     var num_answered = props.num_answered,
         user_list = props.user_list;
 
@@ -29,6 +31,7 @@ function Player_Progress(props) {
 }
 
 function Display_Winners(props) {
+    //display winners at end of game
     var userVotes = props.userVotes,
         user_list = props.user_list;
 
@@ -58,6 +61,7 @@ function Display_Winners(props) {
 }
 
 function Voting_Text(props) {
+    //voting g1
     var question = props.question,
         answerLeft = props.answerLeft,
         answerRight = props.answerRight;
@@ -91,6 +95,7 @@ function Voting_Text(props) {
 }
 
 function Voting_Meme(props) {
+    //voting g2 (display voting)
     var memeMaker = function memeMaker(img, upper, lower) {
         var url = 'data:image/jpeg;base64,' + img;
         return React.createElement(Meme_Generator, { img_url: url, topText: upper, bottomText: lower });
@@ -100,6 +105,7 @@ function Voting_Meme(props) {
         answerLeft = props.answerLeft,
         answerRight = props.answerRight;
 
+    console.log(question);
     return React.createElement(
         "div",
         null,
@@ -121,6 +127,7 @@ function Voting_Meme(props) {
 }
 
 function Voting_Drawing(props) {
+    //votig g3 (display drawing)
     var question = props.question,
         answerLeft = props.answerLeft,
         answerRight = props.answerRight;
@@ -172,6 +179,7 @@ function Voting_Drawing(props) {
 }
 
 function Voting_Host(props) {
+    //voting logic
     var socket = props.socket,
         user_list = props.user_list,
         goToLobby = props.goToLobby;
@@ -230,6 +238,7 @@ function Voting_Host(props) {
         return function () {
             socket.off('vote');
             socket.off('voteOnAnswers');
+            socket.off('playerDisconnected');
         };
     }, []);
 
@@ -241,13 +250,15 @@ function Voting_Host(props) {
                 return React.createElement(Voting_Meme, { question: currentQuestion, answerLeft: answerLeft, answerRight: answerRight });
             } else if (gameType === "drawing") {
                 return React.createElement(Voting_Drawing, { question: currentQuestion, answerLeft: answerLeft, answerRight: answerRight });
-            } else {}
+            } else {
+                console.log('hsdhdhshs');
+            }
         } else {
             console.log(gameType);
             return React.createElement(
                 "p",
                 null,
-                "No answers to vote on received"
+                "Loading Answers..."
             );
         }
     };
@@ -255,7 +266,8 @@ function Voting_Host(props) {
     return React.createElement(
         "div",
         { "class": "text-center vsc-initialized container-fluid" },
-        votingAnswers ? React.createElement(
+        votingAnswers ? //vote finished or not
+        React.createElement(
             "div",
             { "class": "cover-container d-flex w-100 h-100 p-3 mx-auto flex-column " },
             React.createElement(
@@ -293,6 +305,7 @@ function Voting_Host(props) {
 }
 
 function Game_Host(props) {
+    //game logic
     var socket = props.socket,
         goToLobby = props.goToLobby;
 
@@ -325,7 +338,7 @@ function Game_Host(props) {
 
         socket.on('startCountdown', function (time) {
             var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
+            //countdown
             console.log(time);
             setIsQuestionPhase(true);
             setTimeState({ time_minutes: time.minutes, time_seconds: time.seconds, id: id });
@@ -354,13 +367,15 @@ function Game_Host(props) {
             socket.off('answer');
             socket.off('vote');
             socket.off('updateUserAnswers');
+            socket.off('playerDisconnected');
         };
     }, []);
 
     return React.createElement(
         "div",
         { "class": "text-center vsc-initialized container-fluid" },
-        isQuestionPhase == "loading" ? React.createElement(
+        isQuestionPhase == "loading" ? //voting phase
+        React.createElement(
             "div",
             { "class": "cover-container d-flex w-100 h-100 p-3 mx-auto flex-column " },
             React.createElement(
@@ -372,7 +387,8 @@ function Game_Host(props) {
                     "Loading Questions "
                 )
             )
-        ) : isQuestionPhase ? React.createElement(
+        ) : isQuestionPhase ? //question phase
+        React.createElement(
             "div",
             { "class": "cover-container d-flex w-100 h-100 p-3 mx-auto flex-column " },
             React.createElement(

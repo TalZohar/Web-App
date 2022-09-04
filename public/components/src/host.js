@@ -6,6 +6,7 @@ import Game_Host from "./host_game.js"
 
 let socket = io();
 
+// host component is responsible for all player host. 
 
 function Host() {
     const [roomId, setRoomId] = React.useState(null);
@@ -13,7 +14,7 @@ function Host() {
     const [isLobby, setisLobby] = React.useState(null);
   
     React.useEffect(() => {
-
+        // when connecting, get room info from url request
         socket.on('connect', function (){
             let searchQuery = window.location.search.substring(1)
             let params = JSON.parse('{"' + decodeURI(searchQuery).replace(/&/g, '","').replace(/\+/g, ' ').replace(/=/g, '":"') + '"}')
@@ -33,12 +34,14 @@ function Host() {
         socket.on('updateUsersList', function (users){
             setUsers(users)
         })
+        // game doesn't start if server dedcided not enouph player
+
         socket.on('notEnoughPlayers', function (){
             setisLobby(true)
             alert("Not enough players")
         })
         
-        
+        // to avoid dup
 
         return () => {
             socket.off('connect');
@@ -51,6 +54,7 @@ function Host() {
         socket.emit('returnToLobby')
     }
 
+    // call fro lobby or game_host component respective to inner state
     return (
         <div>
             <nav className="navbar navbar-dark" style={{"backgroundColor": "black"}}>

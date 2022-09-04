@@ -6,6 +6,7 @@ import Game_Player from "./player_game.js";
 
 var socket = io();
 
+// player component is responsible for all player logic. 
 function Player() {
     var _React$useState = React.useState(null),
         _React$useState2 = _slicedToArray(_React$useState, 2),
@@ -17,7 +18,11 @@ function Player() {
         isLobby = _React$useState4[0],
         setisLobby = _React$useState4[1];
 
+    // player hooks
+
+
     React.useEffect(function () {
+        // when connecting, get room info from url request
         socket.on('connect', function () {
             var searchQuery = window.location.search.substring(1);
             var params = JSON.parse('{"' + decodeURI(searchQuery).replace(/&/g, '","').replace(/\+/g, ' ').replace(/=/g, '":"') + '"}');
@@ -46,11 +51,14 @@ function Player() {
             console.log("starting game");
             setisLobby(false);
         });
+
+        // game doesn't start if server dedcided not enouph player
         socket.on('notEnoughPlayers', function () {
             setisLobby(true);
             alert("Not enough players");
         });
 
+        // to avoid dup
         return function () {
             socket.off('connect');
             socket.off('disconnect');
@@ -65,6 +73,7 @@ function Player() {
         document.querySelector('input[name="message"]').value = '';
     };
 
+    // component is responsible fro lobby, otherwise call Game_player
     return React.createElement(
         'div',
         { 'class': 'root' },

@@ -1,6 +1,6 @@
 const EventEmitter = require('events')
 const { query } = require('express')
-class GameBase {
+class GameBase { //game base-class that includes the game logic
     constructor (io, socket, room, numOfAnswers) {
         this.io = io
         this.socket = socket
@@ -27,8 +27,8 @@ class GameBase {
         }
     }
 
-    async startGame(){
-        let {userQuestions, questionUsers} = this.#createMatchup(this.room.getNumOfUsers(), this.numOfAnswers)
+    async startGame(){ //the 'run' function of the game. question phase and then voting phase.
+        let {userQuestions, questionUsers} = this.#createMatchup(this.room.getNumOfUsers(), this.numOfAnswers) //get questions for each playa
         this.userQuestions = userQuestions
         this.questionUsers = questionUsers
         this.answerUsers = new Array(this.questionUsers.length)
@@ -36,8 +36,8 @@ class GameBase {
             this.answerUsers[i] = [null,null]
         } 
 
-        await this.initQuestions()
-        await this.questionPhase()  
+        await this.initQuestions() //initialize questions
+        await this.questionPhase()  //question phase code
         this.io.to(this.room.room_id).emit('questionPhaseEnd')
         this.socket.emit('questionPhaseEnd')
         await new Promise((resolve,reject)=>{
@@ -45,27 +45,27 @@ class GameBase {
                 console.log("question phase end")
                 resolve()
         }, 500);
-        })
-        await this.votingPhase()
+        }) 
+        await this.votingPhase() //voting phase
         this.socket.emit('endGame', this.userVotes)
         this.io.to(this.room.room_id).emit('endGame')
     }
 
-    async votingPhase(){
-        for (let i = 0; i <this.questionUsers.length; i++){
+    async votingPhase(){ //voting phase code
+        for (let i = 0; i <this.questionUsers.length; i++){ 
             this.socket.emit('voteOnAnswers', this.getQuestion(i), this.answerUsers[i][0], this.answerUsers[i][1], this.gameType)
             console.log('waiting for vote')
-            await this.getVote(this.questionUsers[i])
+            await this.getVote(this.questionUsers[i])//all users finished voting
         }
         console.log(this.userVotes)
     }
 
-    async getVote(question_users){
+    async getVote(question_users){ //wait for all users vote
         this.io.to(this.room.room_id).emit('voting')
         let votes_cnt=this.num_disconnected
         let userVotes_copy=this.userVotes
         let dis=false
-        while(votes_cnt<this.room.getNumOfUsers()){
+        while(votes_cnt<this.room.getNumOfUsers()){ //check if all votes recieved
             await new Promise((resolve, reject) => {
                 this.socket.once(("hostVote_"+String(this.room.room_id)), function(user,vote){
                     console.log('recieved vote ',user.name,vote)
@@ -73,7 +73,7 @@ class GameBase {
                     userVotes_copy[question_users[vote]] += 1
                     resolve()
                 })
-                this.socket.on('playerDisconnected_voting',()=>{
+                this.socket.on('playerDisconnected_voting',()=>{ //disconnected player logic
                     console.log( "disconnected...")
                     votes_cnt+=1
                     dis=true
@@ -90,17 +90,17 @@ class GameBase {
     async questionPhase(){
         this.socket.emit("startCountdown", {minutes:2, seconds:30}, 'questionID')
         this.socket.emit("updateUserAnswers", this.num_answered, this.room.getUserList())
-        for (let i = 0; i < this.room.getNumOfUsers(); i++){
+        for (let i = 0; i < this.room.getNumOfUsers(); i++){ //asyncly sending and recieving all the questions from each user
             this.sendQuestions(i)
         }
-        await new Promise((resolve, reject) => {
+        await new Promise((resolve, reject) => { //check if all users finished
             this.eventEm.on("userFinished", (user)=>{
                 if (this.hasEveryoneAnswered()){
                     resolve();
                     return;
                 }
             })
-            this.socket.once('endCountdown', (id)=>{
+            this.socket.once('endCountdown', (id)=>{ //if countdown ended end qPhase
                 if (id === "questionID"){
                     if (!this.hasEveryoneAnswered()){
                         console.log("time ended before everyone answered <3")
@@ -113,10 +113,10 @@ class GameBase {
         })
     }
 
-    async sendQuestions(user_num){
+    async sendQuestions(user_num){ 
         let user = this.room.users[user_num]
         let questions = this.userQuestions[user_num]
-        for (let i = 0; i < questions.length; i++){
+        for (let i = 0; i < questions.length; i++){ //send questions and recieve answers 
             console.log("question " + i + " of user " + user.name)
             let questionNum = questions[i]
             await new Promise((resolve, reject) => {
@@ -131,10 +131,10 @@ class GameBase {
             let recievedAnswer = false
             while(!recievedAnswer){
                 await new Promise((resolve, reject) => {
-                    this.socket.once("hostAnswer_"+String(user.id), (user_recieved, answer)=>{
+                    this.socket.once("hostAnswer_"+String(user.id), (user_recieved, answer)=>{ //save answer
                         if (user_recieved.id == user.id){
-                            console.log(answer.data + ' answer ' + i + " of user " + user.name)
-                            recievedAnswer = true
+                            // console.log(answer.data + ' answer ' + i + " of user " + user.name)
+                            recievedAnswer = true 
                             this.userAnswers[user_num][i] = answer.data
                             this.answerUsers[questionNum][user_num==this.questionUsers[questionNum][0] ? 0 : 1] = answer.data
                             resolve()
@@ -143,7 +143,7 @@ class GameBase {
                             console.log("you shouldn't be here")
                         }
                     })
-                    this.socket.on('playerDisconnected_'+String(user.id),()=>{
+                    this.socket.once('playerDisconnected_'+String(user.id),()=>{
                         console.log(user.id, "disconnected...")
                         recievedAnswer = true
                         this.num_answered[user_num]=-2
@@ -160,11 +160,11 @@ class GameBase {
 
     }
 
-    getQuestion(questionNum) {
+    getQuestion(questionNum) { //get question from number
         return this.questionsArr[questionNum]
     }
 
-    async initQuestions(){
+    async initQuestions(){ //get x questions from all questions
         let lst = await this.getQuestionsLstFromFile()
         var chooser = this.randomNoRepeats(lst);
         this.questionsArr = Array(this.questionUsers.length)
@@ -174,11 +174,11 @@ class GameBase {
 
     }
 
-    async getQuestionsLstFromFile(){
+    async getQuestionsLstFromFile(){ //function should be overiden for each game
         return ['what?','who?','when?','why?','how?','where?','is?']
     }
 
-    randomNoRepeats(array) {
+    randomNoRepeats(array) { //helper function for choosing questions
         var copy = array.slice(0);
         return function() {
           if (copy.length < 1) { copy = array.slice(0); }
@@ -190,7 +190,7 @@ class GameBase {
       }
 
 
-    hasEveryoneAnswered() {
+    hasEveryoneAnswered() { //check if everyone answered/disconnected
         for (let i = 0; i < this.room.getNumOfUsers(); i++){
             if ((this.num_answered[i] != this.numOfAnswers)&&(!this.disconnected[i])){
                 return false
@@ -200,7 +200,7 @@ class GameBase {
     }
 
 
-    #createMatchup(userCount, numOfAnswers) {
+    #createMatchup(userCount, numOfAnswers) { //create matchup of questions and users
         let userQuestions = []
         let questionUsers = []
         for (let i = 0; i < userCount; i++){

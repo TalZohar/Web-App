@@ -2,22 +2,36 @@
 'use strict';
 
 function Meme_Generator(props) {
+    //meme caption generation logic for game 2
     var img_url = props.img_url,
         topText = props.topText,
         bottomText = props.bottomText;
 
 
-    var canvasRef = React.useRef(null);
+    var canvasRef = React.useRef(null); //using canvas obj for meme
     var contextRef = React.useRef(null);
 
     React.useEffect(function () {
+        //react code for displaying canvas object
         var canvas = canvasRef.current;
+        // let image = document.createElement('img');
+        // let width=0
+        // let height=0
         var image = document.createElement('img');
         image.src = img_url;
 
+        image.onload = function () {
+            var width = image.width;
+            var height = image.height;
+            callback_load(canvas, image, width, height); //create the canvas
+        };
+    });
+
+    var callback_load = function callback_load(canvas, image, width, height) {
+        // image.src = img_url;
+        console.log(image.src);
         var ctx = canvas.getContext("2d");
-        var width = image.width;
-        var height = image.height;
+
         console.log(height);
         console.log(width);
         console.log("NEWW");
@@ -50,7 +64,7 @@ function Meme_Generator(props) {
         ctx.fillText(bottomText, width / 2, height - yOffset);
 
         contextRef.current = ctx;
-    });
+    };
 
     return React.createElement(
         'div',
@@ -59,7 +73,7 @@ function Meme_Generator(props) {
             style: { width: "100%" },
             ref: canvasRef
         })
-    );
+    ); //display the canvas
 };
 
 export default Meme_Generator;

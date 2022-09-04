@@ -1,7 +1,7 @@
 'use strict';
 import Drawing_Board from "./drawing.js";
-
-function Answers_Text(props){
+//yser in game logic
+function Answers_Text(props){ //answer textbox for user.
     const {text, answerCallback} = props
     const [answer, setAnswer] = React.useState('')
     
@@ -18,7 +18,7 @@ function Answers_Text(props){
         <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
         <div class="jumbotron">
             <h3>Answer the following question:</h3>
-            <p>{text}</p>
+            <p>{text}</p> 
             <input 
             type="text"
             id="inputAnswer"
@@ -33,7 +33,7 @@ function Answers_Text(props){
     
 }
 
-function Answers_Meme(props){
+function Answers_Meme(props){ //display meme, upper and lower caption textboxes
     const {image, answerCallback} = props
     const [answerUpper, setAnswerUpper] = React.useState('')
     const [answerLower, setAnswerLower] = React.useState('')
@@ -45,6 +45,7 @@ function Answers_Meme(props){
         setAnswerUpper(event.target.value)
     }
     const onAnswer = (e) => {
+        console.log('fmdjdj')
         console.log(image)
         e.preventDefault()
         answerCallback({upper: answerUpper, lower: answerLower})
@@ -88,7 +89,7 @@ function Answers_Meme(props){
     )
 }
 
-function Answers_Drawing(props){
+function Answers_Drawing(props){ //display question. user drawing logic
     const {text, answerCallback} = props
     
 
@@ -109,15 +110,18 @@ function Answers_Drawing(props){
     
 }
 
-function Answers_Player(props){
+function Answers_Player(props){ //player answer display logic
     const {socket} = props
     const [recievedAllAnswers, setRecievedAllAnswers] = React.useState(false);
     const [activeQuestion, setActiveQuestion] = React.useState(null);
+    const [waiting, setWaiting] = React.useState(true)
+
 
     React.useEffect(() => {
         socket.on('question', function(data){
             setActiveQuestion(data)
             console.log(data)
+            setWaiting(false)
         })
         
         socket.on('timeEnd', function(){
@@ -138,6 +142,8 @@ function Answers_Player(props){
 
     const onAnswer = (data) => {
         socket.emit('answer', {'data': data})
+        setWaiting(true)
+
     }
 
     const getQuestionHTML = () =>{
@@ -156,7 +162,7 @@ function Answers_Player(props){
             }
         }
         else{
-            return <p>No Questions received</p>
+            return <p>Loading Questions...</p>
         }
     }
 
@@ -166,8 +172,12 @@ function Answers_Player(props){
                  <div class="alert alert-info">
                   <h2>Waiting for other players to answer</h2> </div>)
             :(                        
-              <div>{getQuestionHTML()}</div>
-                    
+              <div>{(waiting) ? (
+                <div class="alert alert-info">
+                 <h2>Waiting For the Next Question...</h2> </div>)
+           :(        
+            getQuestionHTML())}
+            </div>        
                 
             )}
 
@@ -176,7 +186,7 @@ function Answers_Player(props){
 }
 
 
-function Game_Player(props) {
+function Game_Player(props) { //full game (quesion+voting) logic
     const {socket, retToLobby} = props
     const [isQuestionPhase, setIsQuestionPhase] = React.useState(true);
     const [recievedVote, setRecievedVote] = React.useState(false);

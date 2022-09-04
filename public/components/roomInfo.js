@@ -15,6 +15,7 @@ function getUsersHTML(users) {
 }
 
 function RoomInfo(props) {
+    //get room info for display
     var roomId = props.roomId,
         users = props.users;
 

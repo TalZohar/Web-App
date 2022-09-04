@@ -2,7 +2,7 @@
 // import { v4 as uuidv4 } from 'uuid';
 'use strict';
 
-function Chat(props) {
+function Chat(props) { //chat react function
     const {socket} = props
     const  [messages, setMessages] = React.useState([])
 
@@ -29,7 +29,7 @@ function Chat(props) {
         :
         <p>no Messages</p>
         }
-      </div>);
+      </div>); //display chat
 
 }
 

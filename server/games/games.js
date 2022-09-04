@@ -2,26 +2,26 @@ GameBase = require('./gameBase')
 const fs = require('fs');
 const path = require('path')
 
-class Game1 extends GameBase {
+class Game1 extends GameBase { //game 1
     constructor (io, socket, room, numOfAnswers) {
         super(io, socket, room, numOfAnswers)
         this.Path = path.join(__dirname, 'q1.json')
         this.gameType='text'
     }
-    async getQuestionsLstFromFile(){
+    async getQuestionsLstFromFile(){ //questions in q1.json
         let rawdata = fs.readFileSync(this.Path)
         let questions = JSON.parse(rawdata)
         return questions
     }
 }
 
-class Game2 extends GameBase {
+class Game2 extends GameBase { //game 2
     constructor (io, socket, room, numOfAnswers) {
         super(io, socket, room, numOfAnswers)
         this.Path = path.join(__dirname, 'q2')
         this.gameType='meme'
     }
-    async getQuestionsLstFromFile(){
+    async getQuestionsLstFromFile(){//questions are imgs (memes) in q2 directory
         const files = fs.readdirSync(this.Path)
         let questions = []
         for (const file of files) {
@@ -39,13 +39,13 @@ class Game2 extends GameBase {
 
 }
 
-class Game3 extends GameBase {
+class Game3 extends GameBase {//game 3
     constructor (io, socket, room, numOfAnswers) {
         super(io, socket, room, numOfAnswers)
         this.Path = path.join(__dirname, 'q3.json')
         this.gameType='drawing'
     }
-    getQuestionsLstFromFile(){
+    getQuestionsLstFromFile(){ //questions are in q3.json
         let rawdata = fs.readFileSync(this.Path)
         let questions = JSON.parse(rawdata)
         return questions

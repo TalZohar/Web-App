@@ -1,4 +1,4 @@
-const Timer = (props) => {
+const Timer = (props) => { //react timer logic for countdown display
     const {initialMinute = 0,initialSeconds = 0, endCallback=()=>{}} = props;
     const [ minutes, setMinutes ] = React.useState(initialMinute);
     const [seconds, setSeconds ] =  React.useState(initialSeconds);
